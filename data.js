@@ -22,7 +22,7 @@ $(document).ready(async () => {
   console.log('feeds: ', res4.feeds)
 
   const final1 = res1.feeds.filter(
-    (item) => item.field1 !== '0' && item.field1 !== null && item.field2 !== '',
+    (item) => item.field1 !== '0' && item.field1 !== null && item.field1 !== '',
   )
   const final2 = res2.feeds.filter(
     (item) => item.field2 !== '0' && item.field2 !== null && item.field2 !== '',
@@ -48,22 +48,73 @@ $(document).ready(async () => {
   document.getElementById('pm10').innerHTML = `${pm10}`
   document.getElementById('temperature').innerHTML = `${temperture}`
   document.getElementById('pressure').innerHTML = `${pressure}`
+  console.log(`a`, final1)
+  // const mergeData = [...final1, ...final2, ...final3, ...final4]
+  var mergeData = final1.concat(final2)
+  mergeData = mergeData.concat(final3)
+  mergeData = mergeData.concat(final4)
 
-  const mergeData = [...final1, ...final2, ...final3, ...final4]
   console.log('🚀 ~ file: data.js ~ line 53 ~ $ ~ mergeData', mergeData)
+  console.log("🚀 ~ file: data.js ~ line 62 ~ $ ~ mergeData.[mergeData.length-1].entry_id", mergeData[mergeData.length-1].entry_id)
 
-  const mergeDataByDate = mergeData.sort(
+  const temp = []
+
+  for (let i = 0; i < mergeData[mergeData.length-1].entry_id; i++) {
+    const element = mergeData[i]
+
+    const filter = mergeData.filter((x) => x.entry_id === i + 1)
+    if (filter.length > 0) {
+      // filter[0]['field2'] = filter[1][`${Object.keys(filter[1])[2]}`]
+
+      if (filter[1]) {
+        filter[0][`${Object.keys(filter[1])[2]}`] =
+          filter[1][`${Object.keys(filter[1])[2]}`]
+      }
+
+      if (filter[2]) {
+        filter[0][`${Object.keys(filter[2])[2]}`] =
+          filter[2][`${Object.keys(filter[2])[2]}`]
+      }
+
+      if (filter[3]) {
+        filter[0][`${Object.keys(filter[3])[2]}`] =
+          filter[3][`${Object.keys(filter[3])[2]}`]
+      }
+    }
+    console.log('🚀 ~ file: data.js ~ line 59 ~ $ ~ filter', filter)
+    if (filter[0]) temp.push(filter[0])
+  }
+  console.log('🚀 ~ file: data.js ~ line 81 ~ $ ~ temp', temp)
+
+  console.log(
+    '🚀 ~ file: data.js ~ line 53 ~ $ ~ ...final1, ...final2, ...final3, ...final4',
+    final1,
+    final2,
+    final3,
+    final4,
+  )
+
+  const mergeDataByDate = temp.sort(
     (a, b) => new Date(a.created_at) - new Date(b.created_at),
   )
-  console.log('🚀 ~ file: data.js ~ line 58 ~ $ ~ mergeDataByDate', mergeDataByDate)
+  console.log(
+    '🚀 ~ file: data.js ~ line 58 ~ $ ~ mergeDataByDate',
+    mergeDataByDate,
+  )
 
   $('#data').html(``)
-  $.each(mergeData, function (index, value) {
+  $.each(mergeDataByDate, function (index, value) {
     var { created_at, field1, field2, field3, field4 } = value
     created_at = created_at.replace(/[A-Z]/g, ` `)
+    date = new Date(created_at)
+    var newDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60 * 1000,
+    )
+
+    newDate = `${newDate.getDay()}-${newDate.getMonth()}-${newDate.getFullYear()} ${newDate.getHours()}:${newDate.getMinutes()}:${newDate.getSeconds()}`
 
     var html = `<tr>
-                    <td>${created_at}</td>
+                    <td>${newDate}</td>
                     <td>${field1 ? field1 : ''}</td>
                     <td>${field2 ? field2 : ''}</td>
                     <td>${field3 ? field3 : ''}</td>
