@@ -154,13 +154,17 @@ $(document).ready(async () => {
   $('#data').html(``)
   $.each(mergeDataByDate, function (index, value) {
     var { created_at, field1, field2, field3, field4 } = value
+    // console.log("🚀 ~ file: data.js ~ line 157 ~ created_at", typeof created_at)
     created_at = created_at.replace(/[A-Z]/g, ` `)
     date = new Date(created_at)
     var newDate = new Date(
       date.getTime() - date.getTimezoneOffset() * 60 * 1000,
     )
 
-    newDate = `${date.getDay()}-${date.getMonth()}-${newDate.getFullYear()} ${newDate.getHours()}:${
+    newDate = `${created_at.substring(8, 10)}-${created_at.substring(
+      5,
+      7,
+    )}-${created_at.substring(0, 4)} ${newDate.getHours()}:${
       newDate.getMinutes().toString().length < 2
         ? '0' + newDate.getMinutes()
         : newDate.getMinutes()
