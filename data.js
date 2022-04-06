@@ -21,6 +21,37 @@ $(document).ready(async () => {
   console.log('API 4: ', res4)
   console.log('feeds: ', res4.feeds)
 
+  const cutUnitBySec = async (res1) => {
+    res1.feeds.forEach((e) => {
+      var start = 0
+      var end = e.created_at.length - 4
+
+      e.created_at = e.created_at.substring(start, end)
+    })
+    console.log('🚀 ~ file: data.js ~ line 27 ~ $ ~ res1Cut', res1)
+  }
+
+  await cutUnitBySec(res1)
+  await cutUnitBySec(res2)
+  await cutUnitBySec(res3)
+  await cutUnitBySec(res4)
+
+  // return
+
+  // const removeInvalidValue = async (res1) => {
+  //   res1.feeds.filter(
+  //     (item) =>
+  //       item.field1 !== '0' && item.field1 !== null && item.field1 !== '',
+  //   )
+
+  //   return res1
+  // }
+
+  // const final1 = removeInvalidValue(res1)
+  // const final2 = removeInvalidValue(res2)
+  // const final3 = removeInvalidValue(res3)
+  // const final4 = removeInvalidValue(res4)
+
   const final1 = res1.feeds.filter(
     (item) => item.field1 !== '0' && item.field1 !== null && item.field1 !== '',
   )
@@ -48,51 +79,69 @@ $(document).ready(async () => {
   document.getElementById('pm10').innerHTML = `${pm10}`
   document.getElementById('temperature').innerHTML = `${temperture}`
   document.getElementById('pressure').innerHTML = `${pressure}`
-  console.log(`a`, final1)
-  // const mergeData = [...final1, ...final2, ...final3, ...final4]
+
   var mergeData = final1.concat(final2)
   mergeData = mergeData.concat(final3)
   mergeData = mergeData.concat(final4)
 
   console.log('🚀 ~ file: data.js ~ line 53 ~ $ ~ mergeData', mergeData)
-  console.log("🚀 ~ file: data.js ~ line 62 ~ $ ~ mergeData.[mergeData.length-1].entry_id", mergeData[mergeData.length-1].entry_id)
+  // console.log(
+  //   '🚀 ~ file: data.js ~ line 62 ~ $ ~ mergeData.[mergeData.length-1].entry_id',
+  //   mergeData[mergeData.length - 1].entry_id,
+  // )
 
-  const temp = []
+  const xxx = async (mergeData) => {
+    const temp = []
 
-  for (let i = 0; i < mergeData[mergeData.length-1].entry_id; i++) {
-    const element = mergeData[i]
+    // const filter = await mergeData.filter((x) => x.created_at)
+    // console.log('🚀 ~ file: data.js ~ line 97 ~ xxx ~ filter', filter)
 
-    const filter = mergeData.filter((x) => x.entry_id === i + 1)
-    if (filter.length > 0) {
-      // filter[0]['field2'] = filter[1][`${Object.keys(filter[1])[2]}`]
+    const filterByDateAsc = mergeData.sort(
+      (a, b) => new Date(a.created_at) - new Date(b.created_at),
+    )
 
-      if (filter[1]) {
-        filter[0][`${Object.keys(filter[1])[2]}`] =
-          filter[1][`${Object.keys(filter[1])[2]}`]
+    // console.log("🚀 ~ file: data.js ~ line 104 ~ xxx ~ filterByDate", filterByDate)
+
+    for (let i = filterByDateAsc.length - 1; i >= 0; i--) {
+      const filterByDate = filterByDateAsc.filter(
+        (e) => e.created_at === filterByDateAsc[i].created_at,
+      )
+
+      if (filterByDate.length > 0) {
+        if (filterByDate[1]) {
+          filterByDate[0][`${Object.keys(filterByDate[1])[2]}`] =
+            filterByDate[1][`${Object.keys(filterByDate[1])[2]}`]
+        }
+
+        if (filterByDate[2]) {
+          filterByDate[0][`${Object.keys(filterByDate[2])[2]}`] =
+            filterByDate[2][`${Object.keys(filterByDate[2])[2]}`]
+        }
+
+        if (filterByDate[3]) {
+          filterByDate[0][`${Object.keys(filterByDate[3])[2]}`] =
+            filterByDate[3][`${Object.keys(filterByDate[3])[2]}`]
+        }
       }
 
-      if (filter[2]) {
-        filter[0][`${Object.keys(filter[2])[2]}`] =
-          filter[2][`${Object.keys(filter[2])[2]}`]
-      }
-
-      if (filter[3]) {
-        filter[0][`${Object.keys(filter[3])[2]}`] =
-          filter[3][`${Object.keys(filter[3])[2]}`]
-      }
+      if (filterByDate[0]) temp.push(filterByDate[0])
     }
-    console.log('🚀 ~ file: data.js ~ line 59 ~ $ ~ filter', filter)
-    if (filter[0]) temp.push(filter[0])
-  }
-  console.log('🚀 ~ file: data.js ~ line 81 ~ $ ~ temp', temp)
 
-  console.log(
-    '🚀 ~ file: data.js ~ line 53 ~ $ ~ ...final1, ...final2, ...final3, ...final4',
-    final1,
-    final2,
-    final3,
-    final4,
-  )
+    // remove duplicate json
+    const jsonObject = temp.map(JSON.stringify)
+
+    console.log(jsonObject)
+
+    const uniqueSet = new Set(jsonObject)
+    const uniqueArray = Array.from(uniqueSet).map(JSON.parse)
+
+    console.log(uniqueArray)
+    // remove duplicate json
+
+    return uniqueArray
+  }
+  const temp = await xxx(mergeData)
+  console.log('🚀 ~ file: data.js ~ line 163 ~ $ ~ temp', temp)
 
   const mergeDataByDate = temp.sort(
     (a, b) => new Date(a.created_at) - new Date(b.created_at),
@@ -111,7 +160,7 @@ $(document).ready(async () => {
       date.getTime() - date.getTimezoneOffset() * 60 * 1000,
     )
 
-    newDate = `${newDate.getDay()}-${newDate.getMonth()}-${newDate.getFullYear()} ${newDate.getHours()}:${newDate.getMinutes()}:${newDate.getSeconds()}`
+    newDate = `${date.getDay()}-${date.getMonth()}-${newDate.getFullYear()} ${newDate.getHours()}:${newDate.getMinutes()}`
 
     var html = `<tr>
                     <td>${newDate}</td>
