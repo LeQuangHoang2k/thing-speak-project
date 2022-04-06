@@ -160,7 +160,11 @@ $(document).ready(async () => {
       date.getTime() - date.getTimezoneOffset() * 60 * 1000,
     )
 
-    newDate = `${date.getDay()}-${date.getMonth()}-${newDate.getFullYear()} ${newDate.getHours()}:${newDate.getMinutes()}`
+    newDate = `${date.getDay()}-${date.getMonth()}-${newDate.getFullYear()} ${newDate.getHours()}:${
+      newDate.getMinutes().toString().length < 2
+        ? '0' + newDate.getMinutes()
+        : newDate.getMinutes()
+    }`
 
     var html = `<tr>
                     <td>${newDate}</td>
