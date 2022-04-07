@@ -16,11 +16,7 @@ $(document).ready(async () => {
     'https://api.thingspeak.com/channels/1657193/fields/4.json',
   )
 
-  console.log('API 1: ', res1)
-  console.log('API 2: ', res2)
-  console.log('API 3: ', res3)
-  console.log('API 4: ', res4)
-  console.log('feeds: ', res4.feeds)
+  // console.log('feeds: ', res4.feeds)
 
   const formatDate = (feeds) => {
     feeds.map((a) => {
@@ -42,7 +38,7 @@ $(document).ready(async () => {
           : newDate.getMinutes()
 
       a.created_at = `${day}-${month}-${year} ${hour}:${minute}`
-      a.entry_id = null
+      delete a['entry_id']
 
       return a
     })
@@ -85,36 +81,51 @@ $(document).ready(async () => {
     return feeds
   }
 
-  const consistentJson = async (feeds) => {
+  const consistentJson = (feeds) => {
     var temp = []
-    for (let i = feeds.length - 1; i >= 0; i--) {
+    for (let i = 0; i < feeds.length; i++) {
       const filterByDate = feeds.filter(
         (e) => e.created_at === feeds[i].created_at,
       )
 
-      if (filterByDate[0]) {
-        temp.push(filterByDate[0])
-        continue
+      var a = []
+      for (let j = 0; j < filterByDate.length; j++) {
+        if (j === 0) {
+          a.push(filterByDate[j])
+          continue
+        }
+
+        if (
+          Object.keys(filterByDate[j])[1] ===
+          Object.keys(filterByDate[j - 1])[1]
+        ) {
+          filterByDate[j - 1][`${Object.keys(filterByDate[j - 1])[1]}`] =
+            filterByDate[j][`${Object.keys(filterByDate[j])[1]}`]
+
+          continue
+        }
+
+        a.push(filterByDate[j])
       }
 
-      if (filterByDate.length > 0) {
-        if (filterByDate[1]) {
-          filterByDate[0][`${Object.keys(filterByDate[1])[2]}`] =
-            filterByDate[1][`${Object.keys(filterByDate[1])[2]}`]
+      if (a.length > 0) {
+        if (a[1]) {
+          a[0][`${Object.keys(a[1])[1]}`] = a[1][`${Object.keys(a[1])[1]}`]
         }
 
-        if (filterByDate[2]) {
-          filterByDate[0][`${Object.keys(filterByDate[2])[2]}`] =
-            filterByDate[2][`${Object.keys(filterByDate[2])[2]}`]
+        if (a[2]) {
+          a[0][`${Object.keys(a[2])[1]}`] = a[2][`${Object.keys(a[2])[1]}`]
         }
 
-        if (filterByDate[3]) {
-          filterByDate[0][`${Object.keys(filterByDate[3])[2]}`] =
-            filterByDate[3][`${Object.keys(filterByDate[3])[2]}`]
+        if (a[3]) {
+          a[0][`${Object.keys(a[3])[1]}`] = a[3][`${Object.keys(a[3])[1]}`]
         }
       }
+
+      if (a[0]) temp.push(a[0])
     }
-    console.log('🚀 ~ file: data.js ~ line 90 ~ consistentJson ~ temp', temp)
+
+    // console.log('🚀 ~ file: data.js ~ line 90 ~ consistentJson ~ temp', temp)
     return temp
   }
 
@@ -140,8 +151,8 @@ $(document).ready(async () => {
   const final4 = await removeSameJson(res4.feeds)
 
   var mergeData = [...final1, ...final2, ...final3, ...final4]
-  const uniqueMerge = await removeSameJson(mergeData)
-  const temp = await consistentJson(uniqueMerge)
+  const consistentMerge = consistentJson(mergeData)
+  const uniqueMerge = removeSameJson(consistentMerge)
 
   //UI
   document.getElementById('pm25').innerHTML = final1[final1.length - 1].field1
@@ -152,20 +163,24 @@ $(document).ready(async () => {
     final4[final4.length - 1].field4
 
   //print
-  console.log('🚀 ~ file: data.js ~ line 354~ $ ~ res1F', res1.feeds)
-  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ res2F', res2.feeds)
-  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ res3F', res3.feeds)
-  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ res4F', res4.feeds)
+  console.log('API 1: ')
+  console.log('🚀 ~ file: data.js ~ line 20 ~ $ ~ res1.feeds', res1.feeds)
+  console.log('API 2: ')
+  console.log('🚀 ~ file: data.js ~ line 22 ~ $ ~ res2.feeds', res2.feeds)
+  console.log('API 3: ')
+  console.log('🚀 ~ file: data.js ~ line 24 ~ $ ~ res3.feeds', res3.feeds)
+  console.log('API 4: ')
+  console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res4.feeds', res4.feeds)
 
-  console.log('🚀 ~ file: data.js ~ line 354~ $ ~ res1F', final1)
-  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ res2F', final2)
-  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ res3F', final3)
-  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ res4F', final4)
+  console.log('🚀 ~ file: data.js ~ line 354~ $ ~ final1', final1)
+  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final2', final2)
+  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final3', final3)
+  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final4', final4)
 
   console.log('🚀 ~ file: data.js ~ line 125 ~ $ ~ mergeData', mergeData)
-  console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
   // console.log('🚀 ~ file: data.js ~ line 147 ~ $ ~ ascArr', ascArr)
-  console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ finalArr', temp)
+  console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ consistentMerge', consistentMerge)
+  console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
 
   return
 
