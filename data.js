@@ -33,7 +33,7 @@ $(document).ready(async () => {
 
       var hour = newDate.getHours().toString()
       var minute =
-        newDate.getMinutes().length < 2
+        newDate.getMinutes().toString().length < 2
           ? '0' + newDate.getMinutes()
           : newDate.getMinutes()
 
@@ -44,7 +44,7 @@ $(document).ready(async () => {
     })
   }
 
-  const fixNullFirstRecord = async (feeds) => {
+  const fixNullFirstRecord = (feeds) => {
     if (feeds[0].field1 === null || feeds[0].field1 === '')
       return (feeds[0].field1 = '0')
     if (feeds[0].field2 === null || feeds[0].field2 === '')
@@ -55,7 +55,7 @@ $(document).ready(async () => {
       return (feeds[0].field4 = '0')
   }
 
-  const fillFields = async (feeds) => {
+  const fillFields = (feeds) => {
     // alert(1)
     for (let i = 0; i < feeds.length; i++) {
       if (i === 0) continue
@@ -130,37 +130,135 @@ $(document).ready(async () => {
   }
 
   // mess code
-  await formatDate(res1.feeds)
-  await formatDate(res2.feeds)
-  await formatDate(res3.feeds)
-  await formatDate(res4.feeds)
+  formatDate(res1.feeds)
+  formatDate(res2.feeds)
+  formatDate(res3.feeds)
+  formatDate(res4.feeds)
 
-  await fixNullFirstRecord(res1.feeds)
-  await fixNullFirstRecord(res2.feeds)
-  await fixNullFirstRecord(res3.feeds)
-  await fixNullFirstRecord(res4.feeds)
+  fixNullFirstRecord(res1.feeds)
+  fixNullFirstRecord(res2.feeds)
+  fixNullFirstRecord(res3.feeds)
+  fixNullFirstRecord(res4.feeds)
 
-  await fillFields(res1.feeds)
-  await fillFields(res2.feeds)
-  await fillFields(res3.feeds)
-  await fillFields(res4.feeds)
+  fillFields(res1.feeds)
+  fillFields(res2.feeds)
+  fillFields(res3.feeds)
+  fillFields(res4.feeds)
 
-  const final1 = await removeSameJson(res1.feeds)
-  const final2 = await removeSameJson(res2.feeds)
-  const final3 = await removeSameJson(res3.feeds)
-  const final4 = await removeSameJson(res4.feeds)
+  const final1 = removeSameJson(res1.feeds)
+  const final2 = removeSameJson(res2.feeds)
+  const final3 = removeSameJson(res3.feeds)
+  const final4 = removeSameJson(res4.feeds)
 
   var mergeData = [...final1, ...final2, ...final3, ...final4]
   const consistentMerge = consistentJson(mergeData)
   const uniqueMerge = removeSameJson(consistentMerge)
 
   //UI
-  document.getElementById('pm25').innerHTML = final1[final1.length - 1].field1
-  document.getElementById('pm10').innerHTML = final2[final2.length - 1].field2
-  document.getElementById('temperature').innerHTML =
-    final3[final3.length - 1].field3
-  document.getElementById('pressure').innerHTML =
-    final4[final4.length - 1].field4
+  const pm25 = final1[final1.length - 1].field1
+  const pm10 = final2[final2.length - 1].field2
+  const temperture = final3[final3.length - 1].field3
+  const airHumidity = final4[final4.length - 1].field4
+
+  document.getElementById('pm25').innerHTML = pm25
+  document.getElementById('pm10').innerHTML = pm10
+  document.getElementById('temperature').innerHTML = temperture
+  document.getElementById('pressure').innerHTML = airHumidity
+
+  $('#data').html(``)
+  $.each(uniqueMerge, (index, value) => {
+    var { created_at, field1, field2, field3, field4 } = value
+
+    var html = `<tr>
+                    <td>${created_at}</td>
+                    <td>${field1 ? field1 : ''}</td>
+                    <td>${field2 ? field2 : ''}</td>
+                    <td>${field3 ? field3 : ''}</td>
+                    <td>${field4 ? field4 : ''}</td>
+                </tr>`
+    $('#data').prepend(html)
+  })
+
+  const field1s = uniqueMerge.map((a) => Number(a.field1))
+  const field2s = uniqueMerge.map((a) => Number(a.field2))
+  const field3s = uniqueMerge.map((a) => Number(a.field3))
+  const field4s = uniqueMerge.map((a) => Number(a.field4))
+  const dates = uniqueMerge.map((a) => a.created_at)
+
+  console.log(`fields1: `, field1s)
+  console.log(`fields2: `, field2s)
+  console.log(`fields3: `, field3s)
+  console.log(`fields4: `, field4s)
+  console.log('🚀 ~ file: data.js ~ line 85 ~ $ ~ dates', dates)
+
+  await new Chart('mutilplelinesChart', {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [
+        { label: 'PM2.5', data: field1s, borderColor: 'red', fill: false },
+        {
+          label: 'PM10',
+          data: field2s,
+          borderColor: 'green',
+          fill: false,
+        },
+        {
+          label: 'Tempurature',
+          data: field3s,
+          borderColor: 'blue',
+          fill: false,
+        },
+        {
+          label: 'Air Humidity',
+          data: field4s,
+          borderColor: 'pink',
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Multiple lines chart',
+      },
+      // labels: ['PM2.5', 'PM10', 'Temperature', 'Pressure'],
+      // legend: {
+      //   display: true,
+      //   legendText: ['PM2.5', 'PM10', 'Temperature', 'Pressure'],
+      // },
+    },
+  })
+
+  // #############################################################
+  var xValues = ['PM2.5', 'PM10', 'Temperature', 'Air Humidity']
+  var yValues = [pm25, pm10, temperture, airHumidity]
+  var barColors = [
+    'red',
+    'green',
+    'blue',
+    'pink',
+    // "#1e7145"
+  ]
+
+  await new Chart('doughnutChart', {
+    type: 'doughnut',
+    data: {
+      labels: xValues,
+      datasets: [
+        {
+          backgroundColor: barColors,
+          data: yValues,
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Doughnut chart',
+      },
+    },
+  })
 
   //print
   console.log('API 1: ')
@@ -179,7 +277,10 @@ $(document).ready(async () => {
 
   console.log('🚀 ~ file: data.js ~ line 125 ~ $ ~ mergeData', mergeData)
   // console.log('🚀 ~ file: data.js ~ line 147 ~ $ ~ ascArr', ascArr)
-  console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ consistentMerge', consistentMerge)
+  console.log(
+    '🚀 ~ file: data.js ~ line 145 ~ $ ~ consistentMerge',
+    consistentMerge,
+  )
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
 
   return
@@ -359,85 +460,4 @@ $(document).ready(async () => {
   // const field1x = await res1.feeds.forEach((e,i) => {
 
   // });
-
-  const field1s = await final1.map((a) => Number(a.field1))
-  const field2s = await final2.map((a) => Number(a.field2))
-  const field3s = await final3.map((a) => Number(a.field3))
-  const field4s = await final4.map((a) => Number(a.field4))
-  const dates = await dataDscByDate.map((a) => a.created_at)
-
-  console.log(`fields1: `, field1s)
-  console.log(`fields2: `, field2s)
-  console.log(`fields3: `, field3s)
-  console.log(`fields4: `, field4s)
-  console.log('🚀 ~ file: data.js ~ line 85 ~ $ ~ dates', dates)
-
-  await new Chart('mutilplelinesChart', {
-    type: 'line',
-    data: {
-      labels: dates,
-      datasets: [
-        { label: 'PM2.5', data: field1s, borderColor: 'red', fill: false },
-        {
-          label: 'PM10',
-          data: field2s,
-          borderColor: 'green',
-          fill: false,
-        },
-        {
-          label: 'Tempurature',
-          data: field3s,
-          borderColor: 'blue',
-          fill: false,
-        },
-        {
-          label: 'Pressure',
-          data: field4s,
-          borderColor: 'pink',
-          fill: false,
-        },
-      ],
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Multiple lines chart',
-      },
-      // labels: ['PM2.5', 'PM10', 'Temperature', 'Pressure'],
-      // legend: {
-      //   display: true,
-      //   legendText: ['PM2.5', 'PM10', 'Temperature', 'Pressure'],
-      // },
-    },
-  })
-
-  // #############################################################
-  var xValues = ['PM2.5', 'PM10', 'Temperature', 'Pressure']
-  var yValues = [pm25, pm10, temperture, pressure]
-  var barColors = [
-    'red',
-    'green',
-    'blue',
-    'pink',
-    // "#1e7145"
-  ]
-
-  await new Chart('doughnutChart', {
-    type: 'doughnut',
-    data: {
-      labels: xValues,
-      datasets: [
-        {
-          backgroundColor: barColors,
-          data: yValues,
-        },
-      ],
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Doughnut chart',
-      },
-    },
-  })
 })

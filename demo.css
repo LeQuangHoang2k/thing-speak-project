@@ -198,12 +198,19 @@ body {
 
 .table_excel {
   width: 96.5%;
-  height: 1000px;
+  min-height: 100px;
+  height: auto;
   background-color: white;
 
   margin-left: 1.75%;
   margin-right: 1.75%;
 }
+
+
+td {
+  text-align: center;
+}
+
 
 /* 
 .row_one_item2 {
