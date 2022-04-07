@@ -179,39 +179,33 @@ $(document).ready(async () => {
     $('#data').prepend(html)
   })
 
-  const field1s = uniqueMerge.map((a) => Number(a.field1))
-  const field2s = uniqueMerge.map((a) => Number(a.field2))
-  const field3s = uniqueMerge.map((a) => Number(a.field3))
-  const field4s = uniqueMerge.map((a) => Number(a.field4))
+  const pm25s = uniqueMerge.map((a) => Number(a.field1))
+  const pm10s = uniqueMerge.map((a) => Number(a.field2))
+  const temperatures = uniqueMerge.map((a) => Number(a.field3))
+  const airHumidities = uniqueMerge.map((a) => Number(a.field4))
   const dates = uniqueMerge.map((a) => a.created_at)
-
-  console.log(`fields1: `, field1s)
-  console.log(`fields2: `, field2s)
-  console.log(`fields3: `, field3s)
-  console.log(`fields4: `, field4s)
-  console.log('🚀 ~ file: data.js ~ line 85 ~ $ ~ dates', dates)
 
   await new Chart('mutilplelinesChart', {
     type: 'line',
     data: {
       labels: dates,
       datasets: [
-        { label: 'PM2.5', data: field1s, borderColor: 'red', fill: false },
+        { label: 'PM2.5', data: pm25s, borderColor: 'red', fill: false },
         {
           label: 'PM10',
-          data: field2s,
+          data: pm10s,
           borderColor: 'green',
           fill: false,
         },
         {
           label: 'Tempurature',
-          data: field3s,
+          data: temperatures,
           borderColor: 'blue',
           fill: false,
         },
         {
           label: 'Air Humidity',
-          data: field4s,
+          data: airHumidities,
           borderColor: 'pink',
           fill: false,
         },
@@ -282,182 +276,4 @@ $(document).ready(async () => {
     consistentMerge,
   )
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
-
-  return
-
-  // const removeInvalidValue = async (res1) => {
-  //   res1.feeds.filter(
-  //     (item) =>
-  //       item.field1 !== '0' && item.field1 !== null && item.field1 !== '',
-  //   )
-
-  //   return res1
-  // }
-
-  // const final1 = removeInvalidValue(res1)
-  // const final2 = removeInvalidValue(res2)
-  // const final3 = removeInvalidValue(res3)
-  // const final4 = removeInvalidValue(res4)
-
-  // const final1 = res1.feeds.filter(
-  //   (item) => item.field1 !== '0' && item.field1 !== null && item.field1 !== '',
-  // )
-  // const final2 = res2.feeds.filter(
-  //   (item) => item.field2 !== '0' && item.field2 !== null && item.field2 !== '',
-  // )
-  // const final3 = res3.feeds.filter(
-  //   (item) => item.field3 !== '0' && item.field3 !== null && item.field3 !== '',
-  // )
-  // const final4 = res4.feeds.filter(
-  //   (item) => item.field4 !== '0' && item.field4 !== null && item.field4 !== '',
-  // )
-
-  // const pm25 = final1[final1.length - 1].field1
-  // const pm10 = final2[final2.length - 1].field2
-  // const temperture = final3[final3.length - 1].field3
-  // const pressure = final4[final4.length - 1].field4
-
-  console.log('🚀 ~ file: data.js ~ line 28 ~ $ ~ pm25', pm25)
-  console.log('🚀 ~ file: data.js ~ line 41 ~ $ ~ pm10', pm10)
-  console.log('🚀 ~ file: data.js ~ line 43 ~ $ ~ temperture', temperture)
-  console.log('🚀 ~ file: data.js ~ line 45 ~ $ ~ pressure', pressure)
-
-  document.getElementById('pm25').innerHTML = `${pm25}`
-  document.getElementById('pm10').innerHTML = `${pm10}`
-  document.getElementById('temperature').innerHTML = `${temperture}`
-  document.getElementById('pressure').innerHTML = `${pressure}`
-
-  console.log('🚀 ~ file: data.js ~ line 53 ~ $ ~ mergeData', mergeData)
-  // console.log(
-  //   '🚀 ~ file: data.js ~ line 62 ~ $ ~ mergeData.[mergeData.length-1].entry_id',
-  //   mergeData[mergeData.length - 1].entry_id,
-  // )
-
-  const ra = async (mergeData) => {
-    const temp = []
-
-    // const filter = await mergeData.filter((x) => x.created_at)
-    // console.log('🚀 ~ file: data.js ~ line 97 ~ xxx ~ filter', filter)
-
-    const filterByDateAsc = mergeData.sort(
-      (a, b) => new Date(b.created_at) - new Date(a.created_at),
-    )
-
-    // console.log("🚀 ~ file: data.js ~ line 104 ~ xxx ~ filterByDate", filterByDate)
-
-    for (let i = filterByDateAsc.length - 1; i >= 0; i--) {
-      const filterByDate = filterByDateAsc.filter(
-        (e) => e.created_at === filterByDateAsc[i].created_at,
-      )
-
-      if (filterByDate.length > 0) {
-        if (filterByDate[1]) {
-          filterByDate[0][`${Object.keys(filterByDate[1])[2]}`] =
-            filterByDate[1][`${Object.keys(filterByDate[1])[2]}`]
-        }
-
-        if (filterByDate[2]) {
-          filterByDate[0][`${Object.keys(filterByDate[2])[2]}`] =
-            filterByDate[2][`${Object.keys(filterByDate[2])[2]}`]
-        }
-
-        if (filterByDate[3]) {
-          filterByDate[0][`${Object.keys(filterByDate[3])[2]}`] =
-            filterByDate[3][`${Object.keys(filterByDate[3])[2]}`]
-        }
-      }
-
-      if (filterByDate[0]) temp.push(filterByDate[0])
-    }
-
-    // remove duplicate json
-    const jsonObject = temp.map(JSON.stringify)
-
-    console.log(jsonObject)
-
-    const uniqueSet = new Set(jsonObject)
-    const uniqueArray = Array.from(uniqueSet).map(JSON.parse)
-
-    console.log(uniqueArray)
-    // remove duplicate json
-
-    return uniqueArray
-  }
-  const uniqueData = await removeSameJson(mergeData)
-  console.log('🚀 ~ file: data.js ~ line 163 ~ $ ~ uniqueData', uniqueData)
-
-  const formatDateByDate = uniqueData.map((a) => {
-    var { created_at } = a
-    created_at = created_at.replace(/[A-Z]/g, ` `)
-    date = new Date(created_at)
-    var newDate = new Date(
-      date.getTime() - date.getTimezoneOffset() * 60 * 1000,
-    )
-
-    newDate = `${created_at.substring(8, 10)}-${created_at.substring(
-      5,
-      7,
-    )}-${created_at.substring(0, 4)} ${newDate.getHours()}:${
-      newDate.getMinutes().toString().length < 2
-        ? '0' + newDate.getMinutes()
-        : newDate.getMinutes()
-    }`
-
-    a.created_at = newDate
-
-    return a
-  })
-  console.log(
-    '🚀 ~ file: data.js ~ line 167 ~ formatDateByDate ~ formatDateByDate',
-    formatDateByDate,
-  )
-
-  const dataDscByDate = uniqueData.sort(
-    (a, b) => new Date(a.created_at) - new Date(b.created_at),
-  )
-
-  // console.log(
-  //   '🚀 ~ file: data.js ~ line 58 ~ $ ~ mergeDataByDate',
-  //   mergeDataByDate,
-  // )
-
-  // const dates = await mergeDataByDate.map((a) => {
-  //   var { created_at } = a
-  //   created_at = created_at.replace(/[A-Z]/g, ` `)
-  //   date = new Date(created_at)
-  //   var newDate = new Date(
-  //     date.getTime() - date.getTimezoneOffset() * 60 * 1000,
-  //   )
-
-  //   newDate = `${created_at.substring(8, 10)}-${created_at.substring(
-  //     5,
-  //     7,
-  //   )}-${created_at.substring(0, 4)} ${newDate.getHours()}:${
-  //     newDate.getMinutes().toString().length < 2
-  //       ? '0' + newDate.getMinutes()
-  //       : newDate.getMinutes()
-  //   }`
-
-  //   return newDate
-  // })
-
-  $('#data').html(``)
-  $.each(dataDscByDate, function (index, value) {
-    var { created_at, field1, field2, field3, field4 } = value
-
-    var html = `<tr>
-                    <td>${created_at}</td>
-                    <td>${field1 ? field1 : ''}</td>
-                    <td>${field2 ? field2 : ''}</td>
-                    <td>${field3 ? field3 : ''}</td>
-                    <td>${field4 ? field4 : ''}</td>
-                </tr>`
-    $('#data').prepend(html)
-  })
-
-  // #################################################################
-
-  // const field1x = await res1.feeds.forEach((e,i) => {
-
-  // });
 })
