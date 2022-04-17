@@ -62,19 +62,11 @@ $(document).ready(async () => {
     if (feeds[0].field4 === null || feeds[0].field4 === '')
       return (feeds[0].field4 = '0')
 
-    if (
-      feeds[0].field5 === null ||
-      feeds[0].field5 === '' ||
-      feeds[0].field5 === 'nan'
-    )
-      return (feeds[0].field5 = 'error')
+    if (feeds[0].field5 === null || feeds[0].field5 === '')
+      return (feeds[0].field5 = 'nan')
 
-    if (
-      feeds[0].field6 === null ||
-      feeds[0].field6 === '' ||
-      feeds[0].field6 === 'nan'
-    )
-      return (feeds[0].field6 = 'error')
+    if (feeds[0].field6 === null || feeds[0].field6 === '')
+      return (feeds[0].field6 = 'nan')
   }
 
   const fillFields = (feeds) => {
@@ -229,9 +221,12 @@ $(document).ready(async () => {
                     <td>${field5 ? field5 : 'error'}</td>
                     <td>${field6 ? field6 : 'error'}</td>
                     <td>
-                      <a href='https://www.google.com/maps/place/${field5}+${field6}'>
-                        https://www.google.com/maps/place/${field5}+${field6}
+                      <a style='display:${
+                        field5 === 'nan' || field6 === 'nan' ? 'none' : 'block'
+                      }' href='https://www.google.com/maps/place/${field5}+${field6}' target='_blank'>
+                      https://www.google.com/maps/place/${field5}+${field6}
                       </a>
+                      ${field5 === 'nan' || field6 === 'nan' ? 'unknown' : ''}
                     </td>
                 </tr>`
     $('#data').prepend(html)
