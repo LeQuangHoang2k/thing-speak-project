@@ -16,7 +16,15 @@ $(document).ready(async () => {
     'https://api.thingspeak.com/channels/1657193/fields/4.json',
   )
 
-  // console.log('feeds: ', res4.feeds)
+  const res5 = await $.get(
+    'https://api.thingspeak.com/channels/1657193/fields/5.json',
+  )
+
+  const res6 = await $.get(
+    'https://api.thingspeak.com/channels/1657193/fields/6.json',
+  )
+
+  // console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res6.feeds', res6.feeds)
 
   const formatDate = (feeds) => {
     feeds.map((a) => {
@@ -53,6 +61,20 @@ $(document).ready(async () => {
       return (feeds[0].field3 = '0')
     if (feeds[0].field4 === null || feeds[0].field4 === '')
       return (feeds[0].field4 = '0')
+
+    if (
+      feeds[0].field5 === null ||
+      feeds[0].field5 === '' ||
+      feeds[0].field5 === 'nan'
+    )
+      return (feeds[0].field5 = 'error')
+
+    if (
+      feeds[0].field6 === null ||
+      feeds[0].field6 === '' ||
+      feeds[0].field6 === 'nan'
+    )
+      return (feeds[0].field6 = 'error')
   }
 
   const fillFields = (feeds) => {
@@ -67,6 +89,10 @@ $(document).ready(async () => {
         feeds[i].field3 = feeds[i - 1].field3
       if (feeds[i].field4 === null || feeds[i].field4 === '')
         feeds[i].field4 = feeds[i - 1].field4
+      if (feeds[i].field5 === null || feeds[i].field5 === '')
+        feeds[i].field5 = feeds[i - 1].field5
+      if (feeds[i].field6 === null || feeds[i].field6 === '')
+        feeds[i].field6 = feeds[i - 1].field6
     }
   }
 
@@ -120,6 +146,14 @@ $(document).ready(async () => {
         if (a[3]) {
           a[0][`${Object.keys(a[3])[1]}`] = a[3][`${Object.keys(a[3])[1]}`]
         }
+
+        if (a[4]) {
+          a[0][`${Object.keys(a[4])[1]}`] = a[4][`${Object.keys(a[4])[1]}`]
+        }
+
+        if (a[5]) {
+          a[0][`${Object.keys(a[5])[1]}`] = a[5][`${Object.keys(a[5])[1]}`]
+        }
       }
 
       if (a[0]) temp.push(a[0])
@@ -134,23 +168,38 @@ $(document).ready(async () => {
   formatDate(res2.feeds)
   formatDate(res3.feeds)
   formatDate(res4.feeds)
+  formatDate(res5.feeds)
+  formatDate(res6.feeds)
 
   fixNullFirstRecord(res1.feeds)
   fixNullFirstRecord(res2.feeds)
   fixNullFirstRecord(res3.feeds)
   fixNullFirstRecord(res4.feeds)
+  fixNullFirstRecord(res5.feeds)
+  fixNullFirstRecord(res6.feeds)
 
   fillFields(res1.feeds)
   fillFields(res2.feeds)
   fillFields(res3.feeds)
   fillFields(res4.feeds)
+  fillFields(res5.feeds)
+  fillFields(res6.feeds)
 
   const final1 = removeSameJson(res1.feeds)
   const final2 = removeSameJson(res2.feeds)
   const final3 = removeSameJson(res3.feeds)
   const final4 = removeSameJson(res4.feeds)
+  const final5 = removeSameJson(res5.feeds)
+  const final6 = removeSameJson(res6.feeds)
 
-  var mergeData = [...final1, ...final2, ...final3, ...final4]
+  var mergeData = [
+    ...final1,
+    ...final2,
+    ...final3,
+    ...final4,
+    ...final5,
+    ...final6,
+  ]
   const consistentMerge = consistentJson(mergeData)
   const uniqueMerge = removeSameJson(consistentMerge)
 
@@ -159,6 +208,8 @@ $(document).ready(async () => {
   const pm10 = final2[final2.length - 1].field2
   const temperture = final3[final3.length - 1].field3
   const airHumidity = final4[final4.length - 1].field4
+  const latitude = final5[final5.length - 1].field5
+  const longitude = final6[final6.length - 1].field6
 
   document.getElementById('pm25').innerHTML = pm25
   document.getElementById('pm10').innerHTML = pm10
@@ -167,7 +218,7 @@ $(document).ready(async () => {
 
   $('#data').html(``)
   $.each(uniqueMerge, (index, value) => {
-    var { created_at, field1, field2, field3, field4 } = value
+    var { created_at, field1, field2, field3, field4, field5, field6 } = value
 
     var html = `<tr>
                     <td>${created_at}</td>
@@ -175,6 +226,8 @@ $(document).ready(async () => {
                     <td>${field2 ? field2 : ''}</td>
                     <td>${field3 ? field3 : ''}</td>
                     <td>${field4 ? field4 : ''}</td>
+                    <td>${field3 ? field5 : ''}</td>
+                    <td>${field4 ? field6 : ''}</td>
                 </tr>`
     $('#data').prepend(html)
   })
@@ -263,11 +316,17 @@ $(document).ready(async () => {
   console.log('🚀 ~ file: data.js ~ line 24 ~ $ ~ res3.feeds', res3.feeds)
   console.log('API 4: ')
   console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res4.feeds', res4.feeds)
+  console.log('API 5: ')
+  console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res5.feeds', res5.feeds)
+  console.log('API 6: ')
+  console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res6.feeds', res6.feeds)
 
   console.log('🚀 ~ file: data.js ~ line 354~ $ ~ final1', final1)
   console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final2', final2)
   console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final3', final3)
   console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final4', final4)
+  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final5', final5)
+  console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final6', final6)
 
   console.log('🚀 ~ file: data.js ~ line 125 ~ $ ~ mergeData', mergeData)
   // console.log('🚀 ~ file: data.js ~ line 147 ~ $ ~ ascArr', ascArr)
@@ -276,4 +335,56 @@ $(document).ready(async () => {
     consistentMerge,
   )
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
+
+  var src = [10.818377, 106.666664]
+
+  // 38 53 55 N
+  // 77 2 16 W
+
+  function convertToDMS(src) {
+    function toDMS(n) {
+      // The sign doesn't matter
+      n = Math.abs(n)
+
+      // Get the degrees
+      var d = Math.floor(n)
+      // Strip off the answer we already have
+      n = n - d
+      // And then put the minutes before the '.'
+      n *= 60
+
+      // Get the minutes
+      var m = Math.floor(n)
+      // Remove them from the answer
+      n = n - m
+      // Put the seconds before the '.'
+      n *= 60
+
+      // Get the seconds
+      // Should this be round? Or rounded by special rules?
+      var s = Math.floor(n)
+
+      // Put it together.
+      return '' + d + ' ' + m + ' ' + s
+    }
+
+    var dir0 = src[0] > 0 ? '"N' : '"S'
+
+    var dir1 = src[1] > 0 ? '"E' : '"W'
+
+    // console.log(toDMS(src[0]) + dir0)
+    // console.log(toDMS(src[1]) + dir1)
+
+    var demo1 = toDMS(src[0]) + dir0
+    var demo2 = toDMS(src[1]) + dir1
+    
+    demo1 = demo1.replace(' ', '°').replace(' ', "'")
+
+    demo2 = demo2.replace(' ', '°').replace(' ', "'")
+
+    console.log('🚀 ~ file: data.js ~ line 379 ~ convertToDMS ~ demo1', demo1)
+    console.log('🚀 ~ file: data.js ~ line 380 ~ convertToDMS ~ demo2', demo2)
+  }
+
+  convertToDMS(src)
 })
