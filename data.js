@@ -258,23 +258,23 @@ $(document).ready(async () => {
     data: {
       labels: dates,
       datasets: [
-        { label: 'PM2.5', data: pm25s, borderColor: 'red', fill: false },
+        { label: 'PM2.5', data: pm25s, borderColor: 'gray', fill: false },
         {
           label: 'PM10',
           data: pm10s,
-          borderColor: 'green',
+          borderColor: 'black',
           fill: false,
         },
         {
           label: 'Tempurature',
           data: temperatures,
-          borderColor: 'blue',
+          borderColor: 'red',
           fill: false,
         },
         {
           label: 'Air Humidity',
           data: airHumidities,
-          borderColor: 'pink',
+          borderColor: 'blue',
           fill: false,
         },
       ],
@@ -296,10 +296,10 @@ $(document).ready(async () => {
   var xValues = ['PM2.5', 'PM10', 'Temperature', 'Air Humidity']
   var yValues = [pm25, pm10, temperture, airHumidity]
   var barColors = [
+    'gray',
+    'black',
     'red',
-    'green',
     'blue',
-    'pink',
     // "#1e7145"
   ]
 
