@@ -8,10 +8,64 @@ body {
   overflow-x: hidden;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px silver; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: silver; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: black; 
+}
+
+/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */
 .header_menu {
   width: 100%;
   height: 80px;
   background-color: rgb(35, 96, 168);
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.header_logo {
+  width: 185px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.header_title {
+  /* width: 185px;
+  height: 80px;
+  object-fit: cover; */
+  position: absolute;
+  z-index: 1;
+
+  margin: auto;
+
+  color: white;
+
+  font-weight: bold;
+}
+
+.header_mid,
+.header_right {
+  width: 185px;
+  height: 80px;
+
+  color: transparent;
 }
 
 .body {
@@ -123,6 +177,11 @@ body {
   margin-bottom: 40px;
 }
 
+.row_excel{
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
 .row_three {
   background-color: white;
 
@@ -134,6 +193,15 @@ body {
 .row_excel {
   /* width: 1000px; */
   height: 1000px;
+}
+
+.sticky_thead{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  padding: 50px;
+  font-size: 20px;
 }
 
 .row_three_left {
