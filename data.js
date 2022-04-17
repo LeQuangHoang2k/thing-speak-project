@@ -226,8 +226,13 @@ $(document).ready(async () => {
                     <td>${field2 ? field2 : ''}</td>
                     <td>${field3 ? field3 : ''}</td>
                     <td>${field4 ? field4 : ''}</td>
-                    <td>${field3 ? field5 : ''}</td>
-                    <td>${field4 ? field6 : ''}</td>
+                    <td>${field5 ? field5 : 'error'}</td>
+                    <td>${field6 ? field6 : 'error'}</td>
+                    <td>
+                      <a href='https://www.google.com/maps/place/${field5}+${field6}'>
+                        https://www.google.com/maps/place/${field5}+${field6}
+                      </a>
+                    </td>
                 </tr>`
     $('#data').prepend(html)
   })
@@ -377,7 +382,7 @@ $(document).ready(async () => {
 
     var demo1 = toDMS(src[0]) + dir0
     var demo2 = toDMS(src[1]) + dir1
-    
+
     demo1 = demo1.replace(' ', '°').replace(' ', "'")
 
     demo2 = demo2.replace(' ', '°').replace(' ', "'")
