@@ -155,6 +155,20 @@ $(document).ready(async () => {
     return temp
   }
 
+  const trimJson = (feeds) => {
+    // console.log('🚀 ~ file: data.js ~ line 159 ~ trimJson ~ feeds', feeds)
+    const a = feeds
+      .filter((x) => x.field1 !== '0')
+      .filter((x) => x.field2 !== '0')
+      .filter((x) => x.field3 !== '0')
+      .filter((x) => x.field4 !== '0')
+      .filter((x) => x.field5 !== 'nan')
+      .filter((x) => x.field6 !== 'nan')
+    console.log('🚀 ~ file: data.js ~ line 161 ~ trimJson ~ a', a)
+
+    return a
+  }
+
   // mess code
   formatDate(res1.feeds)
   formatDate(res2.feeds)
@@ -194,6 +208,7 @@ $(document).ready(async () => {
   ]
   const consistentMerge = consistentJson(mergeData)
   const uniqueMerge = removeSameJson(consistentMerge)
+  const trimMerge = trimJson(uniqueMerge)
 
   //UI
   const pm25 = final1[final1.length - 1].field1
@@ -209,7 +224,7 @@ $(document).ready(async () => {
   document.getElementById('pressure').innerHTML = airHumidity
 
   $('#data').html(``)
-  $.each(uniqueMerge, (index, value) => {
+  $.each(trimMerge, (index, value) => {
     var { created_at, field1, field2, field3, field4, field5, field6 } = value
 
     var html = `<tr>
@@ -232,11 +247,11 @@ $(document).ready(async () => {
     $('#data').prepend(html)
   })
 
-  const pm25s = uniqueMerge.map((a) => Number(a.field1))
-  const pm10s = uniqueMerge.map((a) => Number(a.field2))
-  const temperatures = uniqueMerge.map((a) => Number(a.field3))
-  const airHumidities = uniqueMerge.map((a) => Number(a.field4))
-  const dates = uniqueMerge.map((a) => a.created_at)
+  const pm25s = trimMerge.map((a) => Number(a.field1))
+  const pm10s = trimMerge.map((a) => Number(a.field2))
+  const temperatures = trimMerge.map((a) => Number(a.field3))
+  const airHumidities = trimMerge.map((a) => Number(a.field4))
+  const dates = trimMerge.map((a) => a.created_at)
 
   await new Chart('mutilplelinesChart', {
     type: 'line',
@@ -335,56 +350,5 @@ $(document).ready(async () => {
     consistentMerge,
   )
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
-
-  var src = [10.818377, 106.666664]
-
-  // 38 53 55 N
-  // 77 2 16 W
-
-  function convertToDMS(src) {
-    function toDMS(n) {
-      // The sign doesn't matter
-      n = Math.abs(n)
-
-      // Get the degrees
-      var d = Math.floor(n)
-      // Strip off the answer we already have
-      n = n - d
-      // And then put the minutes before the '.'
-      n *= 60
-
-      // Get the minutes
-      var m = Math.floor(n)
-      // Remove them from the answer
-      n = n - m
-      // Put the seconds before the '.'
-      n *= 60
-
-      // Get the seconds
-      // Should this be round? Or rounded by special rules?
-      var s = Math.floor(n)
-
-      // Put it together.
-      return '' + d + ' ' + m + ' ' + s
-    }
-
-    var dir0 = src[0] > 0 ? '"N' : '"S'
-
-    var dir1 = src[1] > 0 ? '"E' : '"W'
-
-    // console.log(toDMS(src[0]) + dir0)
-    // console.log(toDMS(src[1]) + dir1)
-
-    var demo1 = toDMS(src[0]) + dir0
-    var demo2 = toDMS(src[1]) + dir1
-
-    demo1 = demo1.replace(' ', '°').replace(' ', "'")
-
-    demo2 = demo2.replace(' ', '°').replace(' ', "'")
-
-    console.log('🚀 ~ file: data.js ~ line 379 ~ convertToDMS ~ demo1', demo1)
-    console.log('🚀 ~ file: data.js ~ line 380 ~ convertToDMS ~ demo2', demo2)
-  }
-
-  convertToDMS(src)
+  console.log('🚀 ~ file: data.js ~ line 200 ~ $ ~ trimForceMerge', trimMerge)
 })
