@@ -1,27 +1,27 @@
 $(document).ready(async () => {
   // logic
   const res1 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/1.json',
+    'https://api.thingspeak.com/channels/1657193/fields/1.json?results=10000',
   )
 
   const res2 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/2.json',
+    'https://api.thingspeak.com/channels/1657193/fields/2.json?results=10000',
   )
 
   const res3 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/3.json',
+    'https://api.thingspeak.com/channels/1657193/fields/3.json?results=10000',
   )
 
   const res4 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/4.json',
+    'https://api.thingspeak.com/channels/1657193/fields/4.json?results=10000',
   )
 
   const res5 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/5.json',
+    'https://api.thingspeak.com/channels/1657193/fields/5.json?results=10000',
   )
 
   const res6 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/6.json',
+    'https://api.thingspeak.com/channels/1657193/fields/6.json?results=10000',
   )
 
   // console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res6.feeds', res6.feeds)
