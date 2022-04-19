@@ -25,13 +25,13 @@ $(document).ready(async () => {
   )
 
   const listBPi = [
-    { i: 1, l: 0, PM10: 0, PM25: 0 },
-    { i: 2, l: 160, PM10: 50, PM25: 25 },
-    { i: 3, l: 200, PM10: 150, PM25: 50 },
-    { i: 4, l: 300, PM10: 250, PM25: 80 },
-    { i: 5, l: 400, PM10: 350, PM25: 150 },
-    { i: 6, l: 800, PM10: 420, PM25: 250 },
-    { i: 7, l: 1000, PM10: 500, PM25: 350 },
+    { i: 1, I: 0, PM10: 0, PM25: 0 },
+    { i: 2, I: 160, PM10: 50, PM25: 25 },
+    { i: 3, I: 200, PM10: 150, PM25: 50 },
+    { i: 4, I: 300, PM10: 250, PM25: 80 },
+    { i: 5, I: 400, PM10: 350, PM25: 150 },
+    { i: 6, I: 800, PM10: 420, PM25: 250 },
+    { i: 7, I: 1000, PM10: 500, PM25: 350 },
   ]
 
   // console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res6.feeds', res6.feeds)
@@ -261,6 +261,40 @@ $(document).ready(async () => {
     return Nowcast
   }
 
+  const indexBPi_calc = (Nowcast) => {
+    let i
+    for (i = 0; i < listBPi.length; i++) {
+      if (Nowcast < listBPi[i].PM25) {
+        break
+      }
+    }
+    return i - 1
+  }
+
+  const AQI_calc = (Nowcast, i) => {
+    console.log('🚀 ~ file: data.js ~ line 275 ~ $ ~ i', i)
+    const BPi = listBPi[i].PM25
+    console.log('🚀 ~ file: data.js ~ line 276 ~ $ ~ BPi', BPi)
+    const Ii = listBPi[i].I
+    console.log('🚀 ~ file: data.js ~ line 278 ~ $ ~ Ii', Ii)
+
+    const BPi_1 = listBPi[i + 1].PM25
+    console.log('🚀 ~ file: data.js ~ line 281 ~ $ ~ BPi_1', BPi_1)
+    const Ii_1 = listBPi[i + 1].I
+    console.log('🚀 ~ file: data.js ~ line 283 ~ $ ~ Ii_1', Ii_1)
+
+    const I_difference = Ii_1 - Ii
+    const BPi_difference = BPi_1 - BPi
+
+    const quotient = I_difference / BPi_difference
+    const NowcastMinusBPi = Nowcast - BPi
+    console.log('🚀 ~ file: data.js ~ line 290 ~ $ ~ Nowcast', Nowcast)
+
+    const AQI = quotient * NowcastMinusBPi + Ii
+
+    return AQI
+  }
+
   // mess code
   formatDate(res1.feeds)
   formatDate(res2.feeds)
@@ -306,6 +340,8 @@ $(document).ready(async () => {
   const W = W_calc(listMaxPM25)
   const w = w_calc(W)
   const Nowcast = Nowcast_calc(listMaxPM25, w)
+  const i = indexBPi_calc(Nowcast)
+  const AQI = AQI_calc(Nowcast, i)
 
   //UI
   const pm25 = final1[final1.length - 1].field1
@@ -441,7 +477,6 @@ $(document).ready(async () => {
   console.log('🚀 ~ file: data.js ~ line 35 ~ $ ~ final6', final6)
 
   console.log('🚀 ~ file: data.js ~ line 125 ~ $ ~ mergeData', mergeData)
-  // console.log('🚀 ~ file: data.js ~ line 147 ~ $ ~ ascArr', ascArr)
   console.log(
     '🚀 ~ file: data.js ~ line 145 ~ $ ~ consistentMerge',
     consistentMerge,
@@ -449,10 +484,13 @@ $(document).ready(async () => {
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
   console.log('🚀 ~ file: data.js ~ line 200 ~ $ ~ trimForceMerge', trimMerge)
   console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ listMaxPM25', listMaxPM25)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ ListBPi', listBPi)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ W', W)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ Nowcast', Nowcast)
-  // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ i', i)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ AQI', AQI)
+
   // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
   // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
 })
