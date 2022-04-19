@@ -180,7 +180,8 @@ $(document).ready(async () => {
     return a
   }
 
-  const findIndexPerHour = (feeds) => {
+  // PM25_
+  const PM25_findIndexPerHour = (feeds) => {
     let i
     let max = feeds[0]
     const maxList = [max]
@@ -212,7 +213,7 @@ $(document).ready(async () => {
     return maxList
   }
 
-  const W_calc = (feeds) => {
+  const PM25_W_calc = (feeds) => {
     const listC = feeds.map((x) => Number(x.field1))
     const Cmin = Math.min(...listC)
     const Cmax = Math.max(...listC)
@@ -220,13 +221,13 @@ $(document).ready(async () => {
     return Cmin / Cmax
   }
 
-  const w_calc = (W) => {
+  const PM25_w_calc = (W) => {
     if (W <= 0.5) return 0.5
 
     return W
   }
 
-  const Nowcast_calc = (feeds, w) => {
+  const PM25_Nowcast_calc = (feeds, w) => {
     var Nowcast = 0
     // var arr = [1, 2, 3]
     if (w === 0.5) {
@@ -261,7 +262,7 @@ $(document).ready(async () => {
     return Nowcast
   }
 
-  const indexBPi_calc = (Nowcast) => {
+  const PM25_indexBPi_calc = (Nowcast) => {
     let i
     for (i = 0; i < listBPi.length; i++) {
       if (Nowcast < listBPi[i].PM25) {
@@ -271,7 +272,7 @@ $(document).ready(async () => {
     return i - 1
   }
 
-  const AQI_calc = (Nowcast, i) => {
+  const PM25_AQI_calc = (Nowcast, i) => {
     console.log('🚀 ~ file: data.js ~ line 275 ~ $ ~ i', i)
     const BPi = listBPi[i].PM25
     console.log('🚀 ~ file: data.js ~ line 276 ~ $ ~ BPi', BPi)
@@ -297,46 +298,28 @@ $(document).ready(async () => {
 
   const checkAirQuality = (AQI) => {
     if (AQI >= 0 || AQI <= 50) {
-      document.getElementById('AQI_pm25').innerHTML = AQI
-      document.getElementById('quality_pm25').innerHTML = 'Tốt'
-      
+      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Tốt)`
       document.getElementById('AQI_pm25').style.color = 'rgb(0,228,0)'
-      document.getElementById('quality_pm25').style.color = 'rgb(0,228,0)'
     }
     if (AQI >= 51 || AQI <= 100) {
-      document.getElementById('AQI_pm25').innerHTML = AQI
-      document.getElementById('quality_pm25').innerHTML = 'Trung Bình'
-      
+      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Trung Bình)`
       document.getElementById('AQI_pm25').style.color = 'rgb(255,255,0)'
-      document.getElementById('quality_pm25').style.color = 'rgb(255,255,0)'
     }
     if (AQI >= 101 || AQI <= 150) {
-      document.getElementById('AQI_pm25').innerHTML = AQI
-      document.getElementById('quality_pm25').innerHTML = 'Kém'
-      
+      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Kém)`
       document.getElementById('AQI_pm25').style.color = 'rgb(255,126,0)'
-      document.getElementById('quality_pm25').style.color = 'rgb(255,126,0)'
     }
     if (AQI >= 151 || AQI <= 200) {
-      document.getElementById('AQI_pm25').innerHTML = AQI
-      document.getElementById('quality_pm25').innerHTML = 'Xấu'
-      
+      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Xấu)`
       document.getElementById('AQI_pm25').style.color = 'rgb(255,0,0)'
-      document.getElementById('quality_pm25').style.color = 'rgb(255,0,0)'
     }
     if (AQI >= 201 || AQI <= 300) {
-      document.getElementById('AQI_pm25').innerHTML = AQI
-      document.getElementById('quality_pm25').innerHTML = 'Rất xấu'
-      
+      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Rất xấu)`
       document.getElementById('AQI_pm25').style.color = 'rgb(143,63,151)'
-      document.getElementById('quality_pm25').style.color = 'rgb(143,63,151)'
     }
     if (AQI >= 301 || AQI <= 500) {
-      document.getElementById('AQI_pm25').innerHTML = AQI
-      document.getElementById('quality_pm25').innerHTML = 'Nguy hại'
-      
+      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Nguy hại)`
       document.getElementById('AQI_pm25').style.color = 'rgb(126,0,35)'
-      document.getElementById('quality_pm25').style.color = 'rgb(126,0,35)'
     }
   }
 
@@ -381,13 +364,13 @@ $(document).ready(async () => {
   const uniqueMerge = removeSameJson(consistentMerge)
   const trimMerge = trimJson(uniqueMerge)
 
-  const listMaxPM25 = findIndexPerHour(trimMerge)
-  const W = W_calc(listMaxPM25)
-  const w = w_calc(W)
-  const Nowcast = Nowcast_calc(listMaxPM25, w)
-  const i = indexBPi_calc(Nowcast)
-  const AQI = AQI_calc(Nowcast, i)
-  checkAirQuality(AQI)
+  const PM25_listMax = PM25_findIndexPerHour(trimMerge)
+  const PM25_W = PM25_W_calc(PM25_listMax)
+  const PM25_w = PM25_w_calc(PM25_W)
+  const PM25_Nowcast = PM25_Nowcast_calc(PM25_listMax, PM25_w)
+  const PM25_i = PM25_indexBPi_calc(PM25_Nowcast)
+  const PM25_AQI = PM25_AQI_calc(PM25_Nowcast, PM25_i)
+  checkAirQuality(PM25_AQI)
 
   //UI
   const pm25 = final1[final1.length - 1].field1
@@ -529,13 +512,13 @@ $(document).ready(async () => {
   )
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
   console.log('🚀 ~ file: data.js ~ line 200 ~ $ ~ trimForceMerge', trimMerge)
-  console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ listMaxPM25', listMaxPM25)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ ListBPi', listBPi)
-  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ W', W)
-  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
-  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ Nowcast', Nowcast)
-  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ i', i)
-  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ AQI', AQI)
+  console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ PM25_listMax', PM25_listMax)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_W', PM25_W)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_w', PM25_w)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_Nowcast', PM25_Nowcast)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_i', PM25_i)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_AQI', PM25_AQI)
 
   // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
   // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
