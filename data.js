@@ -296,30 +296,146 @@ $(document).ready(async () => {
     return AQI
   }
 
-  const checkAirQuality = (AQI) => {
+  // PM10_
+  const PM10_findIndexPerHour = (feeds) => {
+    let i
+    let max = feeds[0]
+    const maxList = [max]
+
+    for (i = 1; i < feeds.length; i++) {
+      if (feeds[i].day !== feeds[i - 1].day) {
+        max = feeds[i]
+        maxList.push(max)
+        continue
+      }
+      if (feeds[i].hour !== feeds[i - 1].hour) {
+        max = feeds[i]
+        maxList.push(max)
+        continue
+      }
+
+      if (Number(feeds[i].field2) > Number(max.field2)) {
+        max = feeds[i]
+        maxList[maxList.length - 1] = max
+
+        continue
+      }
+    }
+    console.log(
+      '🚀 ~ file: data.js ~ line 265 ~ findIndexPerHour ~ max',
+      maxList,
+    )
+
+    return maxList
+  }
+
+  const PM10_W_calc = (feeds) => {
+    const listC = feeds.map((x) => Number(x.field2))
+    const Cmin = Math.min(...listC)
+    const Cmax = Math.max(...listC)
+
+    return Cmin / Cmax
+  }
+
+  const PM10_w_calc = (W) => {
+    if (W <= 0.5) return 0.5
+
+    return W
+  }
+
+  const PM10_Nowcast_calc = (feeds, w) => {
+    var Nowcast = 0
+    // var arr = [1, 2, 3]
+    if (w === 0.5) {
+      for (let i = 0; i < feeds.length; i++) {
+        Nowcast += Math.pow(0.5, i + 1) * Number(feeds[i].field2)
+      }
+    }
+    if (w > 0.5) {
+      numerator = 0
+      denominator = 0
+
+      for (let i = 0; i < feeds.length; i++) {
+        numerator += Math.pow(w, i) * Number(feeds[i].field2)
+        denominator += Math.pow(w, i)
+      }
+
+      Nowcast = numerator / denominator
+    }
+
+    // if (w === 0.5) {
+    //   numerator = 0
+    //   denominator = 0
+
+    //   for (let i = 0; i < arr.length; i++) {
+    //     numerator += Math.pow(w, i) * Number(arr[i])
+    //     denominator += Math.pow(w, i)
+    //   }
+
+    //   Nowcast = numerator / denominator
+    // }
+
+    return Nowcast
+  }
+
+  const PM10_indexBPi_calc = (Nowcast) => {
+    let i
+    for (i = 0; i < listBPi.length; i++) {
+      if (Nowcast < listBPi[i].PM10) {
+        break
+      }
+    }
+    return i - 1
+  }
+
+  const PM10_AQI_calc = (Nowcast, i) => {
+    console.log('🚀 ~ file: data.js ~ line 275 ~ $ ~ i', i)
+    const BPi = listBPi[i].PM10
+    console.log('🚀 ~ file: data.js ~ line 276 ~ $ ~ BPi', BPi)
+    const Ii = listBPi[i].I
+    console.log('🚀 ~ file: data.js ~ line 278 ~ $ ~ Ii', Ii)
+
+    const BPi_1 = listBPi[i + 1].PM10
+    console.log('🚀 ~ file: data.js ~ line 281 ~ $ ~ BPi_1', BPi_1)
+    const Ii_1 = listBPi[i + 1].I
+    console.log('🚀 ~ file: data.js ~ line 283 ~ $ ~ Ii_1', Ii_1)
+
+    const I_difference = Ii_1 - Ii
+    const BPi_difference = BPi_1 - BPi
+
+    const quotient = I_difference / BPi_difference
+    const NowcastMinusBPi = Nowcast - BPi
+    console.log('🚀 ~ file: data.js ~ line 290 ~ $ ~ Nowcast', Nowcast)
+
+    const AQI = quotient * NowcastMinusBPi + Ii
+
+    return AQI
+  }
+
+  const checkAirQuality = (AQI,pm) => {
     if (AQI >= 0 || AQI <= 50) {
-      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Tốt)`
-      document.getElementById('AQI_pm25').style.color = 'rgb(0,228,0)'
+      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Tốt)`
+      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(0,228,0)'
     }
     if (AQI >= 51 || AQI <= 100) {
-      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Trung Bình)`
-      document.getElementById('AQI_pm25').style.color = 'rgb(255,255,0)'
+      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Trung Bình)`
+      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(255,255,0)'
     }
     if (AQI >= 101 || AQI <= 150) {
-      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Kém)`
-      document.getElementById('AQI_pm25').style.color = 'rgb(255,126,0)'
+      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Kém)`
+      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(255,126,0)'
     }
     if (AQI >= 151 || AQI <= 200) {
-      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Xấu)`
-      document.getElementById('AQI_pm25').style.color = 'rgb(255,0,0)'
+      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Xấu)`
+      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(255,0,0)'
     }
     if (AQI >= 201 || AQI <= 300) {
-      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Rất xấu)`
-      document.getElementById('AQI_pm25').style.color = 'rgb(143,63,151)'
+      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Rất xấu)`
+      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(143,63,151)'
     }
     if (AQI >= 301 || AQI <= 500) {
-      document.getElementById('AQI_pm25').innerHTML = `${AQI} (Nguy hại)`
-      document.getElementById('AQI_pm25').style.color = 'rgb(126,0,35)'
+      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Nguy hại)`
+      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(126,0,35)'
     }
   }
 
@@ -370,7 +486,16 @@ $(document).ready(async () => {
   const PM25_Nowcast = PM25_Nowcast_calc(PM25_listMax, PM25_w)
   const PM25_i = PM25_indexBPi_calc(PM25_Nowcast)
   const PM25_AQI = PM25_AQI_calc(PM25_Nowcast, PM25_i)
-  checkAirQuality(PM25_AQI)
+  checkAirQuality(PM25_AQI,25)
+
+  const PM10_listMax = PM10_findIndexPerHour(trimMerge)
+  const PM10_W = PM10_W_calc(PM10_listMax)
+  const PM10_w = PM10_w_calc(PM10_W)
+  const PM10_Nowcast = PM10_Nowcast_calc(PM10_listMax, PM10_w)
+  const PM10_i = PM10_indexBPi_calc(PM10_Nowcast)
+  const PM10_AQI = PM10_AQI_calc(PM10_Nowcast, PM10_i)
+  checkAirQuality(PM10_AQI,10)
+
 
   //UI
   const pm25 = final1[final1.length - 1].field1
