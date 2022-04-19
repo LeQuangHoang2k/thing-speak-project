@@ -188,11 +188,14 @@ $(document).ready(async () => {
 
     for (i = 1; i < feeds.length; i++) {
       if (feeds[i].day !== feeds[i - 1].day) {
+        if (maxList.length === 8) break
+
         max = feeds[i]
         maxList.push(max)
         continue
       }
       if (feeds[i].hour !== feeds[i - 1].hour) {
+        if (maxList.length === 8) break
         max = feeds[i]
         maxList.push(max)
         continue
@@ -304,11 +307,15 @@ $(document).ready(async () => {
 
     for (i = 1; i < feeds.length; i++) {
       if (feeds[i].day !== feeds[i - 1].day) {
+        if (maxList.length === 8) break
+
         max = feeds[i]
         maxList.push(max)
         continue
       }
       if (feeds[i].hour !== feeds[i - 1].hour) {
+        if (maxList.length === 8) break
+
         max = feeds[i]
         maxList.push(max)
         continue
@@ -412,7 +419,7 @@ $(document).ready(async () => {
     return AQI
   }
 
-  const checkAirQuality = (AQI,pm) => {
+  const checkAirQuality = (AQI, pm) => {
     if (AQI >= 0 || AQI <= 50) {
       document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Tốt)`
       document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(0,228,0)'
@@ -480,22 +487,21 @@ $(document).ready(async () => {
   const uniqueMerge = removeSameJson(consistentMerge)
   const trimMerge = trimJson(uniqueMerge)
 
-  const PM25_listMax = PM25_findIndexPerHour(trimMerge)
+  const PM25_listMax = PM25_findIndexPerHour(trimMerge.reverse())
   const PM25_W = PM25_W_calc(PM25_listMax)
   const PM25_w = PM25_w_calc(PM25_W)
   const PM25_Nowcast = PM25_Nowcast_calc(PM25_listMax, PM25_w)
   const PM25_i = PM25_indexBPi_calc(PM25_Nowcast)
   const PM25_AQI = PM25_AQI_calc(PM25_Nowcast, PM25_i)
-  checkAirQuality(PM25_AQI,25)
+  checkAirQuality(PM25_AQI, 25)
 
-  const PM10_listMax = PM10_findIndexPerHour(trimMerge)
+  const PM10_listMax = PM10_findIndexPerHour(trimMerge.reverse())
   const PM10_W = PM10_W_calc(PM10_listMax)
   const PM10_w = PM10_w_calc(PM10_W)
   const PM10_Nowcast = PM10_Nowcast_calc(PM10_listMax, PM10_w)
   const PM10_i = PM10_indexBPi_calc(PM10_Nowcast)
   const PM10_AQI = PM10_AQI_calc(PM10_Nowcast, PM10_i)
-  checkAirQuality(PM10_AQI,10)
-
+  checkAirQuality(PM10_AQI, 10)
 
   //UI
   const pm25 = final1[final1.length - 1].field1
@@ -644,6 +650,13 @@ $(document).ready(async () => {
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_Nowcast', PM25_Nowcast)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_i', PM25_i)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_AQI', PM25_AQI)
+
+  console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ PM10_listMax', PM10_listMax)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM10_W', PM10_W)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM10_w', PM10_w)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM10_Nowcast', PM10_Nowcast)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM10_i', PM10_i)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM10_AQI', PM10_AQI)
 
   // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
   // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
