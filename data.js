@@ -295,6 +295,51 @@ $(document).ready(async () => {
     return AQI
   }
 
+  const checkAirQuality = (AQI) => {
+    if (AQI >= 0 || AQI <= 50) {
+      document.getElementById('AQI_pm25').innerHTML = AQI
+      document.getElementById('quality_pm25').innerHTML = 'Tốt'
+      
+      document.getElementById('AQI_pm25').style.color = 'rgb(0,228,0)'
+      document.getElementById('quality_pm25').style.color = 'rgb(0,228,0)'
+    }
+    if (AQI >= 51 || AQI <= 100) {
+      document.getElementById('AQI_pm25').innerHTML = AQI
+      document.getElementById('quality_pm25').innerHTML = 'Trung Bình'
+      
+      document.getElementById('AQI_pm25').style.color = 'rgb(255,255,0)'
+      document.getElementById('quality_pm25').style.color = 'rgb(255,255,0)'
+    }
+    if (AQI >= 101 || AQI <= 150) {
+      document.getElementById('AQI_pm25').innerHTML = AQI
+      document.getElementById('quality_pm25').innerHTML = 'Kém'
+      
+      document.getElementById('AQI_pm25').style.color = 'rgb(255,126,0)'
+      document.getElementById('quality_pm25').style.color = 'rgb(255,126,0)'
+    }
+    if (AQI >= 151 || AQI <= 200) {
+      document.getElementById('AQI_pm25').innerHTML = AQI
+      document.getElementById('quality_pm25').innerHTML = 'Xấu'
+      
+      document.getElementById('AQI_pm25').style.color = 'rgb(255,0,0)'
+      document.getElementById('quality_pm25').style.color = 'rgb(255,0,0)'
+    }
+    if (AQI >= 201 || AQI <= 300) {
+      document.getElementById('AQI_pm25').innerHTML = AQI
+      document.getElementById('quality_pm25').innerHTML = 'Rất xấu'
+      
+      document.getElementById('AQI_pm25').style.color = 'rgb(143,63,151)'
+      document.getElementById('quality_pm25').style.color = 'rgb(143,63,151)'
+    }
+    if (AQI >= 301 || AQI <= 500) {
+      document.getElementById('AQI_pm25').innerHTML = AQI
+      document.getElementById('quality_pm25').innerHTML = 'Nguy hại'
+      
+      document.getElementById('AQI_pm25').style.color = 'rgb(126,0,35)'
+      document.getElementById('quality_pm25').style.color = 'rgb(126,0,35)'
+    }
+  }
+
   // mess code
   formatDate(res1.feeds)
   formatDate(res2.feeds)
@@ -342,8 +387,7 @@ $(document).ready(async () => {
   const Nowcast = Nowcast_calc(listMaxPM25, w)
   const i = indexBPi_calc(Nowcast)
   const AQI = AQI_calc(Nowcast, i)
-  
-
+  checkAirQuality(AQI)
 
   //UI
   const pm25 = final1[final1.length - 1].field1
