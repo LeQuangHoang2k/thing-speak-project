@@ -170,6 +170,38 @@ $(document).ready(async () => {
     return a
   }
 
+  const findIndexPerHour = (feeds) => {
+    let i
+    let max = feeds[0]
+    const maxList = [max]
+
+    for (i = 1; i < feeds.length; i++) {
+      if (feeds[i].day !== feeds[i - 1].day) {
+        max = feeds[i]
+        maxList.push(max)
+        continue
+      }
+      if (feeds[i].hour !== feeds[i - 1].hour) {
+        max = feeds[i]
+        maxList.push(max)
+        continue
+      }
+
+      if (Number(feeds[i].field1) > Number(max.field1)) {
+        max = feeds[i]
+        maxList[maxList.length - 1] = max
+
+        continue
+      }
+    }
+    console.log(
+      '🚀 ~ file: data.js ~ line 265 ~ findIndexPerHour ~ max',
+      maxList,
+    )
+
+    return maxList
+  }
+
   // mess code
   formatDate(res1.feeds)
   formatDate(res2.feeds)
@@ -210,6 +242,7 @@ $(document).ready(async () => {
   const consistentMerge = consistentJson(mergeData)
   const uniqueMerge = removeSameJson(consistentMerge)
   const trimMerge = trimJson(uniqueMerge)
+  const listIndex = findIndexPerHour(trimMerge)
 
   //UI
   const pm25 = final1[final1.length - 1].field1
@@ -352,4 +385,5 @@ $(document).ready(async () => {
   )
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
   console.log('🚀 ~ file: data.js ~ line 200 ~ $ ~ trimForceMerge', trimMerge)
+  console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ listIndex', listIndex)
 })
