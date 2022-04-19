@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
-
 }
 
 /* a{
@@ -19,35 +18,45 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px silver; 
+  box-shadow: inset 0 0 5px silver;
   border-radius: 10px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: silver; 
+  background: silver;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: black; 
+  background: black;
 }
 
 /* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */
 .header_menu {
   width: 100%;
-  height: 80px;
-  background-color: rgb(35, 96, 168);
+  height: 125px;
+  /* background-color: rgb(35, 96, 168); */
+  background-color: white;
+  box-shadow: 0 0 2px 2px silver;
 
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  /* background-color: white; */
+  /* padding: 50px;
+  font-size: 20px; */
 }
 
 .header_logo {
-  width: 185px;
-  height: 80px;
+  width: 260px;
+  height: 120px;
   object-fit: cover;
 }
 
@@ -60,9 +69,9 @@ body {
 
   margin: auto;
 
-  color: white;
+  color: red;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 25px;
 }
 
 .header_mid,
@@ -182,7 +191,7 @@ body {
   margin-bottom: 40px;
 }
 
-.row_excel{
+.row_excel {
   overflow-x: hidden;
   overflow-y: scroll;
 }
@@ -200,9 +209,10 @@ body {
   height: 1000px;
 }
 
-.sticky_thead{
+.sticky_thead {
   position: -webkit-sticky;
   position: sticky;
+  z-index: 1;
   top: 0;
   background-color: white;
   padding: 50px;

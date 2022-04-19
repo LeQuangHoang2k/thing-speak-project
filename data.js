@@ -46,6 +46,9 @@ $(document).ready(async () => {
           : newDate.getMinutes()
 
       a.created_at = `${day}-${month}-${year} ${hour}:${minute}`
+      a.day = Number(day)
+      a.hour = Number(hour)
+
       delete a['entry_id']
 
       return a
@@ -156,7 +159,6 @@ $(document).ready(async () => {
   }
 
   const trimJson = (feeds) => {
-    // console.log('🚀 ~ file: data.js ~ line 159 ~ trimJson ~ feeds', feeds)
     const a = feeds
       .filter((x) => x.field1 !== '0')
       .filter((x) => x.field2 !== '0')
@@ -164,7 +166,6 @@ $(document).ready(async () => {
       .filter((x) => x.field4 !== '0')
       .filter((x) => x.field5 !== 'nan')
       .filter((x) => x.field6 !== 'nan')
-    console.log('🚀 ~ file: data.js ~ line 161 ~ trimJson ~ a', a)
 
     return a
   }
