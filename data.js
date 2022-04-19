@@ -24,6 +24,16 @@ $(document).ready(async () => {
     'https://api.thingspeak.com/channels/1657193/fields/6.json?results=10000',
   )
 
+  const listBPi = [
+    { i: 1, l: 0, PM10: 0, PM25: 0 },
+    { i: 2, l: 160, PM10: 50, PM25: 25 },
+    { i: 3, l: 200, PM10: 150, PM25: 50 },
+    { i: 4, l: 300, PM10: 250, PM25: 80 },
+    { i: 5, l: 400, PM10: 350, PM25: 150 },
+    { i: 6, l: 800, PM10: 420, PM25: 250 },
+    { i: 7, l: 1000, PM10: 500, PM25: 350 },
+  ]
+
   // console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res6.feeds', res6.feeds)
 
   const formatDate = (feeds) => {
