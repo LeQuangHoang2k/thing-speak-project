@@ -216,6 +216,41 @@ $(document).ready(async () => {
     return W
   }
 
+  const Nowcast_calc = (feeds, w) => {
+    var Nowcast = 0
+    // var arr = [1, 2, 3]
+    if (w === 0.5) {
+      for (let i = 0; i < feeds.length; i++) {
+        Nowcast += Math.pow(0.5, i + 1) * Number(feeds[i].field1)
+      }
+    }
+    if (w > 0.5) {
+      numerator = 0
+      denominator = 0
+
+      for (let i = 0; i < feeds.length; i++) {
+        numerator += Math.pow(w, i) * Number(feeds[i].field1)
+        denominator += Math.pow(w, i)
+      }
+
+      Nowcast = numerator / denominator
+    }
+
+    // if (w === 0.5) {
+    //   numerator = 0
+    //   denominator = 0
+
+    //   for (let i = 0; i < arr.length; i++) {
+    //     numerator += Math.pow(w, i) * Number(arr[i])
+    //     denominator += Math.pow(w, i)
+    //   }
+
+    //   Nowcast = numerator / denominator
+    // }
+
+    return Nowcast
+  }
+
   // mess code
   formatDate(res1.feeds)
   formatDate(res2.feeds)
@@ -260,6 +295,7 @@ $(document).ready(async () => {
   const listMaxPM25 = findIndexPerHour(trimMerge)
   const W = W_calc(listMaxPM25)
   const w = w_calc(W)
+  const Nowcast = Nowcast_calc(listMaxPM25, w)
 
   //UI
   const pm25 = final1[final1.length - 1].field1
@@ -405,4 +441,8 @@ $(document).ready(async () => {
   console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ listMaxPM25', listMaxPM25)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ W', W)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ Nowcast', Nowcast)
+  // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
+  // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
+  // console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ w', w)
 })
