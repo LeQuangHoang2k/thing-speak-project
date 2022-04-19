@@ -342,6 +342,8 @@ $(document).ready(async () => {
   const Nowcast = Nowcast_calc(listMaxPM25, w)
   const i = indexBPi_calc(Nowcast)
   const AQI = AQI_calc(Nowcast, i)
+  
+
 
   //UI
   const pm25 = final1[final1.length - 1].field1
