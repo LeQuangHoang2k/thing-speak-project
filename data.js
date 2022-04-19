@@ -202,6 +202,14 @@ $(document).ready(async () => {
     return maxList
   }
 
+  const calcW = (feeds) => {
+    const listC = feeds.map((x) => Number(x.field1))
+    const Cmin = Math.min(...listC)
+    const Cmax = Math.max(...listC)
+
+    return Cmin / Cmax
+  }
+
   // mess code
   formatDate(res1.feeds)
   formatDate(res2.feeds)
@@ -242,7 +250,9 @@ $(document).ready(async () => {
   const consistentMerge = consistentJson(mergeData)
   const uniqueMerge = removeSameJson(consistentMerge)
   const trimMerge = trimJson(uniqueMerge)
-  const listIndex = findIndexPerHour(trimMerge)
+
+  const listMaxPM25 = findIndexPerHour(trimMerge)
+  const W = calcW(listMaxPM25)
 
   //UI
   const pm25 = final1[final1.length - 1].field1
@@ -385,5 +395,6 @@ $(document).ready(async () => {
   )
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
   console.log('🚀 ~ file: data.js ~ line 200 ~ $ ~ trimForceMerge', trimMerge)
-  console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ listIndex', listIndex)
+  console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ listMaxPM25', listMaxPM25)
+  console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ W', W)
 })
