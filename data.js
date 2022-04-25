@@ -17,11 +17,11 @@ $(document).ready(async () => {
   )
 
   const res5 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/5.json?results=10000',
+    'https://api.thingspeak.com/channels/1713130/field/1.json?results=10000',
   )
 
   const res6 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/6.json?results=10000',
+    'https://api.thingspeak.com/channels/1713130/field/2.json?results=10000',
   )
 
   const listBPi = [
@@ -446,7 +446,30 @@ $(document).ready(async () => {
     }
   }
 
+  const rewrite1 = () => {
+    res5.feeds.map((a) => {
+      a['field5'] = a['field1']
+      delete a['field1']
+
+      return a
+    })
+  }
+
+  const rewrite2 = () => {
+    res6.feeds.map((a) => {
+      a['field6'] = a['field2']
+      delete a['field2']
+
+      return a
+    })
+  }
+
   // mess code
+
+  // Rewrite field
+  rewrite1()
+  rewrite2()
+
   formatDate(res1.feeds)
   formatDate(res2.feeds)
   formatDate(res3.feeds)
