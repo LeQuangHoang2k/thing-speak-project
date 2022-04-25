@@ -1,27 +1,27 @@
 $(document).ready(async () => {
   // logic
   const res1 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/1.json?results=10000',
+    'https://api.thingspeak.com/channels/1657193/fields/1.json',
   )
 
   const res2 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/2.json?results=10000',
+    'https://api.thingspeak.com/channels/1657193/fields/2.json',
   )
 
   const res3 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/3.json?results=10000',
+    'https://api.thingspeak.com/channels/1657193/fields/3.json',
   )
 
   const res4 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/4.json?results=10000',
+    'https://api.thingspeak.com/channels/1657193/fields/4.json',
   )
 
   const res5 = await $.get(
-    'https://api.thingspeak.com/channels/1713130/field/1.json?results=10000',
+    'https://api.thingspeak.com/channels/1713130/field/1.json',
   )
 
   const res6 = await $.get(
-    'https://api.thingspeak.com/channels/1713130/field/2.json?results=10000',
+    'https://api.thingspeak.com/channels/1713130/field/2.json',
   )
 
   const listBPi = [
@@ -70,7 +70,11 @@ $(document).ready(async () => {
       return (feeds[0].field1 = '0')
     if (feeds[0].field2 === null || feeds[0].field2 === '')
       return (feeds[0].field2 = '0')
-    if (feeds[0].field3 === null || feeds[0].field3 === '')
+    if (
+      feeds[0].field3 === null ||
+      feeds[0].field3 === '' ||
+      Number(feeds[0].field3) <= 0
+    )
       return (feeds[0].field3 = '0')
     if (feeds[0].field4 === null || feeds[0].field4 === '')
       return (feeds[0].field4 = '0')
@@ -90,7 +94,11 @@ $(document).ready(async () => {
         feeds[i].field1 = feeds[i - 1].field1
       if (feeds[i].field2 === null || feeds[i].field2 === '')
         feeds[i].field2 = feeds[i - 1].field2
-      if (feeds[i].field3 === null || feeds[i].field3 === '')
+      if (
+        feeds[i].field3 === null ||
+        feeds[i].field3 === '' ||
+        Number(feeds[i].field3) <= 0
+      )
         feeds[i].field3 = feeds[i - 1].field3
       if (feeds[i].field4 === null || feeds[i].field4 === '')
         feeds[i].field4 = feeds[i - 1].field4
@@ -169,13 +177,19 @@ $(document).ready(async () => {
   }
 
   const trimJson = (feeds) => {
-    const a = feeds
-      .filter((x) => x.field1 !== '0')
-      .filter((x) => x.field2 !== '0')
-      .filter((x) => x.field3 !== '0')
-      .filter((x) => x.field4 !== '0')
-      .filter((x) => x.field5 !== 'nan')
-      .filter((x) => x.field6 !== 'nan')
+    var temp = feeds.filter((x) => Object.keys(x)[8])
+    console.log('🚀 ~ file: data.js ~ line 181 ~ trimJson ~ temp', temp)
+
+    var a = temp.filter(
+      (x) =>
+        x.field1 !== '0' &&
+        x.field2 !== '0' &&
+        x.field3 !== '0' &&
+        x.field4 !== '0' &&
+        x.field5 !== 'nan' &&
+        x.field5 !== 'nan',
+    )
+    console.log("🚀 ~ file: data.js ~ line 192 ~ trimJson ~ a", a)
 
     return a
   }
@@ -450,9 +464,14 @@ $(document).ready(async () => {
     res5.feeds.map((a) => {
       a['field5'] = a['field1']
       delete a['field1']
+      delete a['field6']
 
       return a
     })
+    console.log(
+      '🚀 ~ file: data.js ~ line 456 ~ res5.feeds.map ~ res5.feeds',
+      res5.feeds,
+    )
   }
 
   const rewrite2 = () => {
@@ -462,6 +481,10 @@ $(document).ready(async () => {
 
       return a
     })
+    console.log(
+      '🚀 ~ file: data.js ~ line 466 ~ res6.feeds.map ~ res6.feeds',
+      res6.feeds,
+    )
   }
 
   // mess code
