@@ -531,7 +531,8 @@ $(document).ready(async () => {
   const consistentMerge = consistentJson(mergeData)
   const uniqueMerge = removeSameJson(consistentMerge)
   const trimMerge = trimJson(uniqueMerge)
-  const trimReverse = trimMerge.reverse()
+  const tempList = [].concat(trimMerge)
+  const trimReverse = tempList.reverse()
 
   const PM25_listMax = PM25_findIndexPerHour(trimReverse)
   const PM25_W = PM25_W_calc(PM25_listMax)
@@ -689,6 +690,8 @@ $(document).ready(async () => {
   )
   console.log('🚀 ~ file: data.js ~ line 145 ~ $ ~ uniqueMerge', uniqueMerge)
   console.log('🚀 ~ file: data.js ~ line 200 ~ $ ~ trimForceMerge', trimMerge)
+  console.log('🚀 ~ file: data.js ~ line 536 ~ $ ~ tempList', tempList)
+
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ ListBPi', listBPi)
   console.log('🚀 ~ file: data.js ~ line 293 ~ $ ~ PM25_listMax', PM25_listMax)
   console.log('🚀 ~ file: data.js ~ line 248 ~ $ ~ PM25_W', PM25_W)

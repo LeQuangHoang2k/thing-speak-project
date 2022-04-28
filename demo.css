@@ -74,12 +74,19 @@ body {
   font-size: 25px;
 }
 
-.header_mid,
-.header_right {
+.header_mid {
   width: 185px;
   height: 80px;
 
   color: transparent;
+}
+
+.header_right {
+  width: 200px;
+  height: 100px;
+
+  color: black;
+  font-weight: bold;
 }
 
 .body {
@@ -113,6 +120,36 @@ body {
   justify-content: center;
 
   margin-bottom: 20px;
+}
+
+.row_zero {
+  width: 100%;
+  height: 90px;
+  background-color: white;
+
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+
+  margin-bottom: 40px;
+}
+
+.table_cell{
+  width: 50%;
+  height: 90px;
+  border: 3px double silver;
+  
+  display: table-cell;
+  vertical-align: middle;
+  
+  font-size: 20px;
+}
+
+.station_name,
+.station_number {
+  color: red;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .row_two {
