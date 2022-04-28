@@ -1,37 +1,46 @@
 $(document).ready(async () => {
   // logic
   const res1 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/1.json',
+    'https://api.thingspeak.com/channels/1657193/fields/1.json?results=10000',
   )
 
   const res2 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/2.json',
+    'https://api.thingspeak.com/channels/1657193/fields/2.json?results=10000',
   )
 
   const res3 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/3.json',
+    'https://api.thingspeak.com/channels/1657193/fields/3.json?results=10000',
   )
 
   const res4 = await $.get(
-    'https://api.thingspeak.com/channels/1657193/fields/4.json',
+    'https://api.thingspeak.com/channels/1657193/fields/4.json?results=10000',
   )
 
   const res5 = await $.get(
-    'https://api.thingspeak.com/channels/1713130/field/1.json',
+    'https://api.thingspeak.com/channels/1713130/field/1.json?results=10000',
   )
 
   const res6 = await $.get(
-    'https://api.thingspeak.com/channels/1713130/field/2.json',
+    'https://api.thingspeak.com/channels/1713130/field/2.json?results=10000',
   )
 
   const listBPi = [
     { i: 1, I: 0, PM10: 0, PM25: 0 },
-    { i: 2, I: 160, PM10: 50, PM25: 25 },
-    { i: 3, I: 200, PM10: 150, PM25: 50 },
-    { i: 4, I: 300, PM10: 250, PM25: 80 },
-    { i: 5, I: 400, PM10: 350, PM25: 150 },
-    { i: 6, I: 800, PM10: 420, PM25: 250 },
-    { i: 7, I: 1000, PM10: 500, PM25: 350 },
+    { i: 2, I: 50, PM10: 50, PM25: 25 },
+    { i: 3, I: 100, PM10: 150, PM25: 50 },
+    { i: 4, I: 150, PM10: 250, PM25: 80 },
+    { i: 5, I: 200, PM10: 350, PM25: 150 },
+    { i: 6, I: 300, PM10: 420, PM25: 250 },
+    { i: 7, I: 400, PM10: 500, PM25: 350 },
+  ]
+
+  const listBenchmark = [
+    { status: 'Tốt', color: 'rgb(0,228,0)' },
+    { status: 'Trung Bình', color: 'rgb(255,255,0)' },
+    { status: 'Kém', color: 'rgb(255,126,0)' },
+    { status: 'Xấu', color: 'rgb(255,0,0)' },
+    { status: 'Rất xấu', color: 'rgb(143,63,151)' },
+    { status: 'Nguy hại', color: 'rgb(126,0,35)' },
   ]
 
   // console.log('🚀 ~ file: data.js ~ line 26 ~ $ ~ res6.feeds', res6.feeds)
@@ -189,7 +198,7 @@ $(document).ready(async () => {
         x.field5 !== 'nan' &&
         x.field5 !== 'nan',
     )
-    console.log("🚀 ~ file: data.js ~ line 192 ~ trimJson ~ a", a)
+    console.log('🚀 ~ file: data.js ~ line 192 ~ trimJson ~ a', a)
 
     return a
   }
@@ -245,36 +254,27 @@ $(document).ready(async () => {
   }
 
   const PM25_Nowcast_calc = (feeds, w) => {
+    const getPM25 = feeds.map((x) => Number(x.field1))
+    const reverseList = getPM25.reverse()
     var Nowcast = 0
-    // var arr = [1, 2, 3]
+    console.log('🚀 ~ file: data.js ~ line 250 ~ $ ~ reverseList', reverseList)
+
     if (w === 0.5) {
-      for (let i = 0; i < feeds.length; i++) {
-        Nowcast += Math.pow(0.5, i + 1) * Number(feeds[i].field1)
+      for (let i = 0; i < reverseList.length; i++) {
+        Nowcast += Math.pow(0.5, i + 1) * Number(reverseList[i])
       }
     }
     if (w > 0.5) {
       numerator = 0
       denominator = 0
 
-      for (let i = 0; i < feeds.length; i++) {
-        numerator += Math.pow(w, i) * Number(feeds[i].field1)
+      for (let i = 0; i < reverseList.length; i++) {
+        numerator += Math.pow(w, i) * Number(reverseList[i])
         denominator += Math.pow(w, i)
       }
 
       Nowcast = numerator / denominator
     }
-
-    // if (w === 0.5) {
-    //   numerator = 0
-    //   denominator = 0
-
-    //   for (let i = 0; i < arr.length; i++) {
-    //     numerator += Math.pow(w, i) * Number(arr[i])
-    //     denominator += Math.pow(w, i)
-    //   }
-
-    //   Nowcast = numerator / denominator
-    // }
 
     return Nowcast
   }
@@ -365,36 +365,27 @@ $(document).ready(async () => {
   }
 
   const PM10_Nowcast_calc = (feeds, w) => {
+    const getPM10 = feeds.map((x) => Number(x.field2))
+    const reverseList = getPM10.reverse()
     var Nowcast = 0
-    // var arr = [1, 2, 3]
+    console.log('🚀 ~ file: data.js ~ line 360 ~ $ ~ reverseList', reverseList)
+
     if (w === 0.5) {
-      for (let i = 0; i < feeds.length; i++) {
-        Nowcast += Math.pow(0.5, i + 1) * Number(feeds[i].field2)
+      for (let i = 0; i < reverseList.length; i++) {
+        Nowcast += Math.pow(0.5, i + 1) * Number(reverseList[i])
       }
     }
     if (w > 0.5) {
       numerator = 0
       denominator = 0
 
-      for (let i = 0; i < feeds.length; i++) {
-        numerator += Math.pow(w, i) * Number(feeds[i].field2)
+      for (let i = 0; i < reverseList.length; i++) {
+        numerator += Math.pow(w, i) * Number(reverseList[i])
         denominator += Math.pow(w, i)
       }
 
       Nowcast = numerator / denominator
     }
-
-    // if (w === 0.5) {
-    //   numerator = 0
-    //   denominator = 0
-
-    //   for (let i = 0; i < arr.length; i++) {
-    //     numerator += Math.pow(w, i) * Number(arr[i])
-    //     denominator += Math.pow(w, i)
-    //   }
-
-    //   Nowcast = numerator / denominator
-    // }
 
     return Nowcast
   }
@@ -429,34 +420,42 @@ $(document).ready(async () => {
     console.log('🚀 ~ file: data.js ~ line 290 ~ $ ~ Nowcast', Nowcast)
 
     const AQI = quotient * NowcastMinusBPi + Ii
+    console.log('🚀 ~ file: data.js ~ line 414 ~ $ ~ AQI', AQI)
 
     return AQI
   }
 
   const checkAirQuality = (AQI, pm) => {
-    if (AQI >= 0 || AQI <= 50) {
-      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Tốt)`
-      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(0,228,0)'
+    let getId = document.getElementById(`AQI_pm${pm}`)
+    const perfectAQI = Math.round(AQI * 100) / 100
+    console.log(
+      '🚀 ~ file: data.js ~ line 421 ~ checkAirQuality ~ perfectAQI',
+      perfectAQI,
+    )
+
+    if (perfectAQI >= 0 && perfectAQI <= 50) {
+      getId.innerHTML = `${perfectAQI} ${listBenchmark[0].status}`
+      getId.style.color = listBenchmark[0].color
     }
-    if (AQI >= 51 || AQI <= 100) {
-      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Trung Bình)`
-      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(255,255,0)'
+    if (perfectAQI >= 51 && perfectAQI <= 100) {
+      getId.innerHTML = `${perfectAQI} ${listBenchmark[1].status}`
+      getId.style.color = listBenchmark[1].color
     }
-    if (AQI >= 101 || AQI <= 150) {
-      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Kém)`
-      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(255,126,0)'
+    if (perfectAQI >= 101 && perfectAQI <= 150) {
+      getId.innerHTML = `${perfectAQI} ${listBenchmark[2].status}`
+      getId.style.color = listBenchmark[2].color
     }
-    if (AQI >= 151 || AQI <= 200) {
-      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Xấu)`
-      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(255,0,0)'
+    if (perfectAQI >= 151 && perfectAQI <= 200) {
+      getId.innerHTML = `${perfectAQI} ${listBenchmark[3].status}`
+      getId.style.color = listBenchmark[3].color
     }
-    if (AQI >= 201 || AQI <= 300) {
-      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Rất xấu)`
-      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(143,63,151)'
+    if (perfectAQI >= 201 && perfectAQI <= 300) {
+      getId.innerHTML = `${perfectAQI} ${listBenchmark[4].status}`
+      getId.style.color = glistBenchmark[4].color
     }
-    if (AQI >= 301 || AQI <= 500) {
-      document.getElementById(`AQI_pm${pm}`).innerHTML = `${AQI} (Nguy hại)`
-      document.getElementById(`AQI_pm${pm}`).style.color = 'rgb(126,0,35)'
+    if (perfectAQI >= 301 && perfectAQI <= 500) {
+      getId.innerHTML = `${perfectAQI} ${listBenchmark[5].status}`
+      getId.style.color = listBenchmark[5].color
     }
   }
 
@@ -532,8 +531,9 @@ $(document).ready(async () => {
   const consistentMerge = consistentJson(mergeData)
   const uniqueMerge = removeSameJson(consistentMerge)
   const trimMerge = trimJson(uniqueMerge)
+  const trimReverse = trimMerge.reverse()
 
-  const PM25_listMax = PM25_findIndexPerHour(trimMerge.reverse())
+  const PM25_listMax = PM25_findIndexPerHour(trimReverse)
   const PM25_W = PM25_W_calc(PM25_listMax)
   const PM25_w = PM25_w_calc(PM25_W)
   const PM25_Nowcast = PM25_Nowcast_calc(PM25_listMax, PM25_w)
@@ -541,7 +541,7 @@ $(document).ready(async () => {
   const PM25_AQI = PM25_AQI_calc(PM25_Nowcast, PM25_i)
   checkAirQuality(PM25_AQI, 25)
 
-  const PM10_listMax = PM10_findIndexPerHour(trimMerge.reverse())
+  const PM10_listMax = PM10_findIndexPerHour(trimReverse)
   const PM10_W = PM10_W_calc(PM10_listMax)
   const PM10_w = PM10_w_calc(PM10_W)
   const PM10_Nowcast = PM10_Nowcast_calc(PM10_listMax, PM10_w)
