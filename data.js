@@ -99,22 +99,70 @@ $(document).ready(async () => {
     // alert(1)
     for (let i = 0; i < feeds.length; i++) {
       if (i === 0) continue
-      if (feeds[i].field1 === null || feeds[i].field1 === '')
+
+      if (
+        feeds[i].field1 === null ||
+        feeds[i].field1 === '' ||
+        Number(feeds[i].field1) <= 0 ||
+        Number(feeds[i].field1) >= 1000
+      )
         feeds[i].field1 = feeds[i - 1].field1
-      if (feeds[i].field2 === null || feeds[i].field2 === '')
+
+      if (
+        feeds[i].field2 === null ||
+        feeds[i].field2 === '' ||
+        Number(feeds[i].field2) <= 0 ||
+        Number(feeds[i].field2) >= 1000
+      )
         feeds[i].field2 = feeds[i - 1].field2
+
       if (
         feeds[i].field3 === null ||
         feeds[i].field3 === '' ||
-        Number(feeds[i].field3) <= 0
+        Number(feeds[i].field3) <= 0 ||
+        Number(feeds[i].field3) >= 1000
       )
         feeds[i].field3 = feeds[i - 1].field3
-      if (feeds[i].field4 === null || feeds[i].field4 === '')
+
+      if (
+        feeds[i].field4 === null ||
+        feeds[i].field4 === '' ||
+        Number(feeds[i].field4) <= 0 ||
+        Number(feeds[i].field4) >= 1000
+      )
         feeds[i].field4 = feeds[i - 1].field4
-      if (feeds[i].field5 === null || feeds[i].field5 === '')
+
+      if (
+        feeds[i].field5 === null ||
+        feeds[i].field5 === '' ||
+        Number(feeds[i].field5) <= 0
+      )
         feeds[i].field5 = feeds[i - 1].field5
-      if (feeds[i].field6 === null || feeds[i].field6 === '')
+
+      if (
+        feeds[i].field6 === null ||
+        feeds[i].field6 === '' ||
+        Number(feeds[i].field6) <= 0
+      )
         feeds[i].field6 = feeds[i - 1].field6
+
+      // if (feeds[i].field1 === null || feeds[i].field1 === '')
+      //   feeds[i].field1 = feeds[i - 1].field1
+      // if (feeds[i].field2 === null || feeds[i].field2 === '')
+      //   feeds[i].field2 = feeds[i - 1].field2
+      // if (
+      //   feeds[i].field3 === null ||
+      //   feeds[i].field3 === '' ||
+      //   Number(feeds[i].field3) <= 0 ||
+      //   Number(feeds[i].field3) >= 1000
+      // )
+      //   feeds[i].field3 = feeds[i - 1].field3
+      // if (feeds[i].field4 === null || feeds[i].field4 === '')
+      //   feeds[i].field4 = feeds[i - 1].field4
+      // if (feeds[i].field5 === null || feeds[i].field5 === '')
+      //   feeds[i].field5 = feeds[i - 1].field5
+      // if (feeds[i].field6 === null || feeds[i].field6 === '')
+      //   feeds[i].field6 = feeds[i - 1].field6
     }
   }
 
@@ -290,6 +338,10 @@ $(document).ready(async () => {
   }
 
   const PM25_AQI_calc = (Nowcast, i) => {
+    if (i === 6) {
+      return 0
+    }
+
     console.log('🚀 ~ file: data.js ~ line 275 ~ $ ~ i', i)
     const BPi = listBPi[i].PM25
     console.log('🚀 ~ file: data.js ~ line 276 ~ $ ~ BPi', BPi)
@@ -401,6 +453,10 @@ $(document).ready(async () => {
   }
 
   const PM10_AQI_calc = (Nowcast, i) => {
+    if (i === 6) {
+      return 0
+    }
+
     console.log('🚀 ~ file: data.js ~ line 275 ~ $ ~ i', i)
     const BPi = listBPi[i].PM10
     console.log('🚀 ~ file: data.js ~ line 276 ~ $ ~ BPi', BPi)
