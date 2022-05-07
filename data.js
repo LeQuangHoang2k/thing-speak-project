@@ -244,7 +244,7 @@ $(document).ready(async () => {
         x.field3 !== '0' &&
         x.field4 !== '0' &&
         x.field5 !== 'nan' &&
-        x.field5 !== 'nan',
+        x.field6 !== 'nan',
     )
     console.log('🚀 ~ file: data.js ~ line 192 ~ trimJson ~ a', a)
 
